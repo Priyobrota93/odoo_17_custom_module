@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+<!--        <record id="action_bancat_patient_file" model="ir.actions.act_window">-->
+<!--            <field name="name">Patient Documents</field>-->
+<!--            <field name="res_model">bancat.patient.file</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="domain">[('patient_id', '=', active_id)]</field>-->
+<!--        </record>-->
+        <record id="action_open_documents" model="ir.actions.act_window">
+            <field name="name">Patient Documents</field>
+            <field name="res_model">documents.document</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('patient_id', '=', active_id)]</field>
+            <field name="context">{'default_patient_id': active_id}</field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="bsms_patient_tree_view" model="ir.ui.view">
+            <field name="name">bancat.patient.tree</field>
+            <field name="model">bancat.patient</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="patient_id"/>
+                    <field name="name" placeholder="Enter full name"/>
+                    <field name="gender"/>
+                    <field name="dob"/>
+                    <field name="age"/>
+                    <field name="patient_address"/>
+                    <field name="emergency_contact"/>
+                    <field name="bed_allocation_id"/>
+                    <field name="current_hospital"/>
+                    <field name="hospital_address"/>
+<!--                    <field name="attendance_ids" widget="one2many_list">-->
+<!--                        <field name="atten_name" string="Attendance Name"/>-->
+<!--                        <field name="atten_address" string="Attendance Address"/>-->
+<!--                        <field name="atten_contact_number" string="Attendance Contact"/>-->
+<!--                        <field name="atten_relation_of_patient"/>-->
+<!--                        <field name="atten2_name" string="Additional Attendance Name"/>-->
+<!--                        <field name="atten2_address" string="Additional Attendance Address"/>-->
+<!--                        <field name="atten2_contact_number" string="Additional Attendance Contact"/>-->
+<!--                        <field name="atten2_relation_of_patient"/>-->
+<!--                    </field>-->
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="bsms_patient_form_view" model="ir.ui.view">
+            <field name="name">bancat.patient.form</field>
+            <field name="model">bancat.patient</field>
+            <field name="arch" type="xml">
+<!--                <header>-->
+<!--                    <div name="button_box" position="inside">-->
+<!--                    <button-->
+<!--                        name="%(action_open_documents)d"-->
+<!--                        type="action"-->
+<!--                        string="Documents"-->
+<!--                        class="oe_stat_button"-->
+<!--                        icon="fa-file"-->
+<!--                        />-->
+<!--                    </div>-->
+<!--                    <field name="document_count"/>-->
+<!--                </header>-->
+                <form>
+
+                    <sheet>
+                        <div name="button_box" position="inside">
+                            <button class="oe_stat_button"
+                                    type="action"
+                                    name="%(action_open_documents)d"
+                                    icon="fa-file">
+                                <div class="oe_stat_info">
+                                    <span class="oe_stat_text">Documents</span>
+                                    <div>
+                                        <field name="document_count"/>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Enter full name"/>
+                            </h1>
+                            <div class="oe_avatar">
+                                <field name="profile_image" widget="image" class="oe_avatar" options="{'size': [128, 128]}"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="patient_id"/>
+                                <field name="dob"/>
+                                <field name="age" readonly="1"/>
+                                <field name="cancer_type"/>
+                                <field name="cancer_stage" />
+                            </group>
+                            <group>
+                                <field name="gender"/>
+                                <field name="bed_allocation_id"/>
+                                <field name="patient_address"/>
+                                <field name="emergency_contact"/>
+                            </group>
+                        </group>
+                        <notebook>
+
+                            <page string ="Current Situation">
+                                 <sheet>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="current_hospital"/>
+                                                <field name="hospital_address" readonly="1"/>
+                                            </group>
+                                            <group>
+                                                <field name="treatment_details" widget="text"/>
+                                                <field name="current_status"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                 </sheet>
+                            </page>
+<!--                            <page string="Attendance Information">-->
+<!--                                <button name="%(bancat_management_system.action_bancat_attendance)d" string="Add" type="action" class="oe_highlight"/>-->
+<!--                            </page>-->
+                            <page string="Attendance Information">
+<!--                                <div class="oe_button_box" name="button_box">-->
+<!--                                    <button name="%(bancat_management_system.action_bancat_attendance)d"-->
+<!--                                            string="Add Attendance"-->
+<!--                                            type="action"-->
+<!--                                            class="oe_highlight"/>-->
+<!--                                </div>-->
+                                
+                                <h1>Current Attendance Records</h1>
+                                <field name="attendance_ids" nolabel="1" context="{'default_patient_id': active_id}">
+                                    <tree decoration-info="atten2_name" create="'Add an attendance'">
+                                        <field name="create_date" string="Recorded Date"/>
+                                        <field name="atten_name"/>
+                                        <field name="atten_age"/>
+                                        <field name="atten_gender"/>
+                                        <field name="atten_relation_of_patient"/>
+                                        <field name="atten_contact_number"/>
+                                        <field name="atten_profession"/>
+                                        <field name="atten_education_level"/>
+                                        <field name="atten_reference"/>
+                                        <field name="atten_address"/>
+                                        <field name="atten2_name" string="Additional Attendant"/>
+                                        <field name="atten2_contact_number" string="Additional Contact"/>
+                                        <field name="atten2_relation_of_patient" string="Additional Relation"/>
+                                    </tree>
+                                </field>
+
+
+                            </page>
+                            <page string="Documents">
+                                <field name="document_ids" nolabel="1">
+                                    <tree editable="bottom" create="'Add a file'" delete="true">
+                                        <field name="name"/>
+                                        <field name="attachment_id" widget="binary"/>
+<!--                                        <field name="file_description"/>-->
+                                    </tree>
+                                    <kanban>
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_global_click">
+                                                    <strong><field name="name"/></strong>
+                                                    <field name="attachment_id" widget="binary"/>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+
+
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="bsms_patient_kanban_view" model="ir.ui.view">
+            <field name="name">bancat.patient.kanban</field>
+            <field name="model">bancat.patient</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="profile_image"/>
+                    <field name="name"/>
+                    <field name="patient_id"/>
+                    <field name="gender"/>
+                    <field name="age"/>
+                    <field name="cancer_type"/>
+                    <field name="cancer_stage"/>
+                    <field name="emergency_contact"/>
+                    
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                        <!-- Profile image covering the left side -->
+                        <t t-if="record.profile_image.raw_value">
+                            <field name="profile_image" class="o_kanban_image_fill_left d-block" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}" field_id="profile_image_0"/>
+                        </t>
+                        <t t-else="">
+                            <div class="o_kanban_image_fill_left d-flex align-items-center justify-content-center bg-100 bg-gradient">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-75 h-75 opacity-50" viewBox="0 0 20 20">
+                                    <g fill="currentColor">
+                                        <path d="M 10 11 C 4.08 11 2 14 2 16 L 2 19 L 18 19 L 18 16 C 18 14 15.92 11 10 11 Z"/>
+                                        <circle cx="10" cy="5.5" r="4.5"/>
+                                    </g>
+                                </svg>
+                            </div>
+                        </t>
+                                <div class="oe_kanban_details">
+                                    <strong><field name="name"/></strong>
+                                    <div>
+                                        <span>Patient Id: <field name="patient_id"/></span>
+                                    </div>
+                                    <div>
+                                        <span>Gender: <field name="gender"/></span>
+                                    </div>
+                                    <div>
+                                        <span>Age: <field name="age"/></span>
+                                    </div>
+                                    <div>
+                                        <span>Cancer Type: <field name="cancer_type"/></span>
+                                    </div>
+                                    <div>
+                                        <span>Cancer Stage: <field name="cancer_stage"/></span>
+                                    </div>
+                                    <div>
+                                        <span>Contact: <field name="emergency_contact"/></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_bsms_patient" model="ir.actions.act_window">
+            <field name="name">Patient</field>
+            <field name="res_model">bancat.patient</field>
+            <field name="view_mode">list,form,kanban</field>
+            <field name="view_id" ref="bsms_patient_kanban_view"/>
+            <field name="help" type="html">
+                <p class='o_view_nocontent_smiling_face'>
+                    Create a patient contact
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+
+
+
+<!--                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">-->
+<!--                            <div class="oe_title mw-75 ps-0 pe-2">-->
+<!--                                <h1 class="d-flex flex-row align-items-center">-->
+<!--                                    <div name="name" class="o_field_widget o_required_modifier o_field_char" style="font-size: min(4vw, 2.6rem);">-->
+<!--                                        <input class="o_input" id="name_0" type="text" autocomplete="off" placeholder="Employee's Name">-->
+<!--                                    </div>-->
+<!--                                </h1>-->
+<!--                                <h2>-->
+<!--                                    <div name="job_title" class="o_field_widget o_field_char">-->
+<!--                                        <input class="o_input" id="job_title_0" type="text" autocomplete="off" placeholder="Job Position">-->
+<!--                                    </div>-->
+<!--                                </h2>-->
+<!--                                <div name="category_ids" class="o_field_widget o_field_many2many_tags">-->
+<!--                                <div class="o_field_tags d-inline-flex flex-wrap gap-1 o_tags_input o_input">-->
+<!--                                    <div class="o_field_many2many_selection d-inline-flex w-100">-->
+<!--                                        <div class="o_input_dropdown">-->
+<!--                                            <div class="o-autocomplete dropdown">-->
+<!--                                                <input type="text" class="o-autocomplete&#45;&#45;input o_input" autocomplete="off" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" id="category_ids_0" placeholder="Tags" aria-expanded="false">-->
+<!--                                            </div>-->
+<!--                                            <span class="o_dropdown_button">-->
+<!--                                        </span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            </div>-->
+<!--                            <div class="o_employee_avatar m-0 p-0">-->
+<!--                                <div name="image_1920" class="o_field_widget o_field_image oe_avatar m-0">-->
+<!--                                    <div class="d-inline-block position-relative opacity-trigger-hover">-->
+<!--                                        <div aria-atomic="true" class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover" style="">-->
+<!--                                            <span style="display:contents">-->
+<!--                                                <button class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1" data-tooltip="Edit" aria-label="Edit">-->
+<!--                                                <i class="fa fa-pencil fa-fw">-->
+<!--                                                </i>-->
+<!--                                            </button>-->
+<!--                                            </span>-->
+<!--                                            <input type="file" class="o_input_file d-none" accept="image/*">-->
+<!--                                        </div>-->
+<!--                                        <img loading="lazy" class="img img-fluid" alt="Binary file" src="/web/static/img/placeholder.png" name="image_1920" style="">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+

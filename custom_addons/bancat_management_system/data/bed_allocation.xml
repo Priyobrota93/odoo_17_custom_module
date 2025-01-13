@@ -1,0 +1,114 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Beds for Alok Nibash 1 -->
+        <record id="alok_nibash_1_room_1_bed_1" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">101</field>
+            <field name="bed_no">1</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_1_room_1_bed_2" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">101</field>
+            <field name="bed_no">2</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_1_room_1_bed_3" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">101</field>
+            <field name="bed_no">3</field>
+            <field name="is_available">True</field>
+        </record>
+
+        <record id="alok_nibash_1_room_2_bed_1" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">102</field>
+            <field name="bed_no">1</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_1_room_2_bed_2" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">102</field>
+            <field name="bed_no">2</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_1_room_2_bed_3" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">102</field>
+            <field name="bed_no">3</field>
+            <field name="is_available">True</field>
+        </record>
+
+        <record id="alok_nibash_1_room_3_bed_1" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">103</field>
+            <field name="bed_no">1</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_1_room_3_bed_2" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">103</field>
+            <field name="bed_no">2</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_1_room_3_bed_3" model="bed.allocation">
+            <field name="building_name">alok_nibash_1</field>
+            <field name="room_no">103</field>
+            <field name="bed_no">3</field>
+            <field name="is_available">True</field>
+        </record>
+
+        <!-- Beds for Alok Nibash 2 -->
+        <record id="alok_nibash_2_room_1_bed_1" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">101</field>
+            <field name="bed_no">1</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_2_room_1_bed_2" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">101</field>
+            <field name="bed_no">2</field>
+            <field name="is_available">True</field>
+        </record>
+
+        <record id="alok_nibash_2_room_2_bed_1" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">102</field>
+            <field name="bed_no">1</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_2_room_2_bed_2" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">102</field>
+            <field name="bed_no">2</field>
+            <field name="is_available">True</field>
+        </record>
+
+        <record id="alok_nibash_2_room_3_bed_1" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">103</field>
+            <field name="bed_no">1</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_2_room_3_bed_2" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">103</field>
+            <field name="bed_no">2</field>
+            <field name="is_available">True</field>
+        </record>
+
+        <record id="alok_nibash_2_room_4_bed_1" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">104</field>
+            <field name="bed_no">1</field>
+            <field name="is_available">True</field>
+        </record>
+        <record id="alok_nibash_2_room_4_bed_2" model="bed.allocation">
+            <field name="building_name">alok_nibash_2</field>
+            <field name="room_no">104</field>
+            <field name="bed_no">2</field>
+            <field name="is_available">True</field>
+        </record>
+    </data>
+</odoo>

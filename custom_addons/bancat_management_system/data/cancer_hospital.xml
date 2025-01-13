@@ -1,0 +1,33 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Bangladesh Cancer Institute -->
+        <record id="hospital_bangladesh_cancer_institute" model="bancat.hospital">
+            <field name="name">Bangladesh Cancer Institute</field>
+            <field name="address">House 105, Road 5, Dhanmondi, Dhaka, Bangladesh</field>
+        </record>
+
+        <!-- Advanced Cancer Hospital & Research Center -->
+        <record id="hospital_advanced_cancer_hospital" model="bancat.hospital">
+            <field name="name">Advanced Cancer Hospital &amp; Research Center</field>
+            <field name="address">123, Gulshan-2, Dhaka, Bangladesh</field>
+        </record>
+
+        <!-- Evercare Hospital Dhaka -->
+        <record id="hospital_evercare_hospital" model="bancat.hospital">
+            <field name="name">Evercare Hospital Dhaka</field>
+            <field name="address">Plot 1, Road 2, Bashundhara, Dhaka, Bangladesh</field>
+        </record>
+
+        <!-- Proton Therapy Center -->
+        <record id="hospital_proton_therapy_center" model="bancat.hospital">
+            <field name="name">Proton Therapy Center</field>
+            <field name="address">Block A, 56-57, Baridhara, Dhaka, Bangladesh</field>
+        </record>
+
+        <!-- Ushashi Cancer Care Center -->
+        <record id="hospital_ushashi_cancer_care" model="bancat.hospital">
+            <field name="name">Ushashi Cancer Care Center</field>
+            <field name="address">House 25, Road 4, Mohammadpur, Dhaka, Bangladesh</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">Mobile Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('mobile_access', '=', True)]</field>
+        </record>
+
+    </data>
+</odoo>

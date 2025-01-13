@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id = "cancer_hospital_tree_view" model="ir.ui.view">
+            <field name="name">bancat.hospital.tree</field>
+            <field name ="model">bancat.hospital</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="address"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id = "cancer_hospital_form_view" model="ir.ui.view">
+            <field name="name">bancat.hospital.form</field>
+            <field name ="model">bancat.hospital</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="address"/>
+                        </group>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="action_cancer_hospital" model="ir.actions.act_window">
+            <field name="name">Cancer Hospital</field>
+            <field name="res_model">bancat.hospital</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref ="cancer_hospital_tree_view"/>
+        </record>
+    </data>
+
+</odoo>

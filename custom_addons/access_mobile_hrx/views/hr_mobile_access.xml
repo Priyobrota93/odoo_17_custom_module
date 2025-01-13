@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the employee form view to add the change password button -->
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='hr_settings']//field[@name='user_id']" position="after">
+                    <field name="mobile_access"/>
+                    <button name="action_change_password" string="Change Password"
+                    type="object" class="oe_highlight custom_button"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Define the form view for changing the password -->
+        <record id="view_change_password_form" model="ir.ui.view">
+            <field name="name">hr.change.password.form</field>
+            <field name="model">hr.employee.change.password</field>
+            <field name="arch" type="xml">
+                <form string="Change Password">
+                    <group>
+                        <field name="new_password" placeholder="New Password"/>
+                        <field name="confirm_password" placeholder="Confirm Password"/>
+                    </group>
+                    <footer>
+                        <button name="action_set_password" string="Set" type="object" class="oe_highlight"/>
+                        <button string="Back" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Define the action to open the change password form -->
+        <record id="action_change_password" model="ir.actions.act_window">
+            <field name="name">Change Password</field>
+            <field name="res_model">hr.employee.change.password</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_change_password_form"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

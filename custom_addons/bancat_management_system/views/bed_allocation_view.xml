@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <record id="view_bed_allocation_tree" model="ir.ui.view">
+            <field name="name">bed.allocation.tree</field>
+            <field name="model">bed.allocation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="building_name"/>
+                    <field name="room_no"/>
+                    <field name="bed_no"/>
+                    <field name="is_available"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bed_allocation_form" model="ir.ui.view">
+            <field name="name">bed.allocation.form</field>
+            <field name="model">bed.allocation</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="building_name"/>
+                            <field name="room_no"/>
+                            <field name="bed_no"/>
+                            <field name="is_available"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Action -->
+    <record id="action_bed_allocation" model="ir.actions.act_window">
+        <field name="name">Bed Allocation</field>
+        <field name="res_model">bed.allocation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref ="view_bed_allocation_tree"/>
+    </record>
+    </data>
+</odoo>

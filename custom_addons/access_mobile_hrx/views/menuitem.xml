@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <menuitem name="HRx" id="menu_root_hrx" web_icon="access_mobile_hrx,static/description/icon.png">
+   </menuitem> -->
+    <record id="action_open_view_employee_list_my" model="ir.actions.act_window">
+        <field name="name">Mobile Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('mobile_access', '=', True)]</field>
+    </record>
+
+   
+
+    <menuitem id="menu_mobile_access" name="Mobile Portal" action="action_open_view_employee_list_my" parent="hr.menu_hr_employee_payroll" sequence="10"/>
+<!--    <menuitem id="menu_mobile" name="Mobile Access" action="action_open_view_employee_list_my" parent="hr.menu_hr_employee_payroll" sequence="10"/>-->
+
+    <record id="action_hr_attendance_request_view" model="ir.actions.act_window">
+        <field name="name">Attendance Requests</field>
+        <field name="res_model">hr.mobile.attendance.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="access_mobile_hrx.view_hr_attendance_request_tree"/>
+    </record>
+
+    <menuitem id="menu_hr_attendance_view_request" name="Attendance Requests" parent="hr_attendance.menu_hr_attendance_root" sequence="5" action="action_hr_attendance_request_view"/>   
+ 
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem name="BSMS" id="menu_root_bsms_contact" web_icon="bancat_software_management_system,static/description/icon.png">
+        <menuitem id="menu_bsms_contact" name="BSMS Contacts">
+            <menuitem id="menu_bsms_donor" name="BSMS Donor" action="action_bsms_patient"/>
+            <menuitem id="menu_bsms_patient" name="BSMS Patient" action="action_bsms_patient"/>
+        </menuitem>
+        <menuitem id="menu_bsms_config" name="Configuration">
+            <menuitem id="menu_cancer_type" name="Cancer Types"/>
+            <menuitem id="menu_bed_allocation" name="Bed Allocation" action="action_bed_allocation"/>
+            <menuitem id="menu_hospital" name="Hospitals" action="action_cancer_hospital"/>
+        </menuitem>
+    </menuitem>
+
+
+</odoo>
+<!-- <menuitem name="Property Ads" id="menu_root_property_ads" web_icon="real_estate_test,static/description/icon.png">-->
+<!--        <menuitem id="menu_property_ads" name="Ads">-->
+<!--            <menuitem id="menu_property" name="Property" action="real_estate_test.action_property"/>-->
+<!--        </menuitem>-->
+<!--        <menuitem id="menu_property_ads_settings" name="Settings">-->
+<!--            <menuitem id="menu_property_type" name="Property Types" action="real_estate_test.action_property_type"/>-->
+<!--            <menuitem id="menu_property_tag" name="Property Tag" action="real_estate_test.action_property_tag"/>-->
+<!--            <menuitem id="menu_property_offers" name="Offers" action="real_estate_test.action_property_offers" />-->
+<!--        </menuitem>-->
+<!--    </menuitem>-->
+
+
+<!--<menuitem name="BSMS" id="menu_bsms" sequence="-1" parent="menu_root_bsms_contact"/>-->
+<!--    <menuitem name="BSMS Contacts" id="menu_bsms_contact" parent="menu_bsms"/>-->
+
+<!--    <menuitem name="BSMS Donor" id="menu_bsms_donor" parent="menu_bsms_contact"/>-->
+<!--    <menuitem name="BSMS Patient" id="menu_bsms_patient" parent="menu_bsms_contact"/>-->
+
+<!--    <menuitem name="Configuration" id="menu_bsms_config" parent="menu_root_bsms_contact"/>-->
+<!--    <menuitem name="Donor Type" id="menu_bsms_type" parent="menu_bsms_config"/>-->
+<!--    <menuitem name="Bed Allocation" id="menu_bsms_bed_allocation_type" parent="menu_bsms_config"/>-->

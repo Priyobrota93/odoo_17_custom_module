@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_attendance_request_tree" model="ir.ui.view">
+            <field name="name">hr.mobile.attendance.request.tree</field>
+            <field name="model">hr.mobile.attendance.request</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance Requests" default_order="request_date desc">
+                    <field name="employee_id"/>
+                    <field name="request_date"/>
+                    <field name="status"/>
+                    <field name="reason"/>
+                    <field name="worked_hours"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_attendance_request_form" model="ir.ui.view">
+            <field name="name">hr.mobile.attendance.request.form</field>
+            <field name="model">hr.mobile.attendance.request</field>
+            <field name="arch" type="xml">
+                <form string="Attendance Request">
+                    <header>
+                        <button name="action_approved" string="Approve" type="object" 
+                                class="oe_highlight" invisible="status != 'draft'"/>
+                        <button name="action_rejected" string="Reject" type="object" 
+                                class="oe_highlight" invisible="status != 'draft'"/>
+                        <button name="action_draft" string="Set to Draft" type="object" 
+                                invisible="status == 'draft'"/>
+                        <field name="status" widget="statusbar" statusbar_visible="draft,approved,rejected"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="request_date"/>
+                            <field name="status"/>
+                            <field name="reason"/>
+                            <field name="check_in"/>
+                            <field name="check_out"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

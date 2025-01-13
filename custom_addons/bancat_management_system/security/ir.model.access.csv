@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+bancat_management_system.access_bancat_patient,access_bancat_patient,bancat_management_system.model_bancat_patient,base.group_user,1,1,1,1
+bancat_management_system_bancat_cancer_type,access_bancat_cancer_type,bancat_management_system.model_bancat_cancer_type,base.group_user,1,1,1,1
+bancat_management_system.access_bed_allocation,access_bed_allocation,bancat_management_system.model_bed_allocation,base.group_user,1,1,1,1
+bancat_management_system.access_bancat_hospital,access_bancat_hospital,bancat_management_system.model_bancat_hospital,base.group_user,1,1,1,1
+bancat_management_system.access_bancat_attendance,access_bancat_attendance,bancat_management_system.model_bancat_attendance,base.group_user,1,1,1,1

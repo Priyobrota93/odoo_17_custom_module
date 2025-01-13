@@ -1,0 +1,21 @@
+<odoo>
+    <data noupdate="1">
+        <record id ="cancer_type_breast" model="bancat.cancer.type">
+            <field name="name">Breast Cancer</field>
+        </record>
+        <record id ="cancer_type_lung" model="bancat.cancer.type">
+            <field name="name">Lung Cancer</field>
+        </record>
+        <record id ="cancer_type_prostate" model="bancat.cancer.type">
+            <field name="name">Prostate Cancer</field>
+        </record>
+        <record id ="cancer_type_skin" model="bancat.cancer.type">
+            <field name="name">Skin Cancer</field>
+        </record>
+        <record id ="cancer_type_leukemia" model="bancat.cancer.type">
+            <field name="name">Leukemia</field>
+        </record>
+    </data>
+</odoo>
+
+
