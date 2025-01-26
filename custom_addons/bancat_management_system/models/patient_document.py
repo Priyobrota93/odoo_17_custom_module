@@ -1,4 +1,7 @@
-from odoo import fields, models
+from odoo import fields, models, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class DocumentsDocument(models.Model):
     _inherit = 'documents.document'  # Inherit from the Documents module

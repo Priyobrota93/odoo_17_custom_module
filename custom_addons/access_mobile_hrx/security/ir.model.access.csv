@@ -3,3 +3,4 @@ access_hr_mobile_access_user,access.hr_mobile_access.user,model_hr_mobile_attend
 access_hr_user_mobile_otps,access.hr_user_mobile_otps,model_hr_user_mobile_otps,base.group_user,1,0,0,0
 access_hr_mobile_attendance_request,access.hr_mobile_attendance.request,model_hr_mobile_attendance_request,base.group_user,1,1,1,1
 access_hr_mobile_access_employee,access.hr_mobile_access.employee,model_hr_employee,base.group_user,1,1,1,1
+access_mobile_hrx.access_hr_employee_change_password,access_hr_employee_change_password,access_mobile_hrx.model_hr_employee_change_password,base.group_user,1,1,1,1

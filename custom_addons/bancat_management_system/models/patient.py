@@ -35,7 +35,6 @@ class Patient(models.Model):
 
     bed_allocation_id = fields.Many2one('bed.allocation', string="Bed Allocation", domain="[('is_available', '=', True)]", tracking=True)
     patient_address = fields.Char(string="Address",tracking=True)
-    contact_number = fields.Char(string="Contact Number", required=True,tracking=True)
     email = fields.Char(string="Email",tracking=True)
     emergency_contact=fields.Char(string="Emergency Contact",tracking=True)
 
@@ -136,7 +135,7 @@ class Patient(models.Model):
     @api.model
     def create(self, vals):
         # Create a folder for the patient
-        patient = super(BancatPatient, self).create(vals)
+        patient = super(Patient, self).create(vals)
         folder = self.env['documents.folder'].create({
             'name': patient.name,
             'description': f"Folder for patient {patient.name}",

@@ -12,6 +12,9 @@
                     <button name="action_change_password" string="Change Password"
                     type="object" class="oe_highlight custom_button"/>
                 </xpath>
+                 <xpath expr="//field[@name='work_email']" position="after">
+                    <field name="supervisor_id"/>
+                </xpath>
             </field>
         </record>
 

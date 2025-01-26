@@ -7,6 +7,11 @@ class TestPortalAccess(models.Model):
 
     mobile_access = fields.Boolean(string='Mobile Access', default=False)
     password = fields.Char(string='Password')
+    supervisor_id = fields.Many2one(
+        'hr.employee',
+        string='Supervisor',
+        domain="[('mobile_access', '=', True), ('id', '!=', id)]"  # Filter supervisors with mobile_access enabled exclude self
+    )
     # email_sent = fields.Boolean(string='Email Sent', default=False)
 
     # def write(self, vals):

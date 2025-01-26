@@ -3,6 +3,10 @@
     "author": "BANCAT",
     "license": "LGPL-3",
     "category": "Services",
+    "summary": 'Manage patient and donor details, bed allocation, and hospital information',
+    "description": """
+            A module to manage patient and donor details, bed allocation, and hospital information.
+        """,
     "depends": ['base', 'mail','documents'],
     "data": [
         'security/ir.model.access.csv',

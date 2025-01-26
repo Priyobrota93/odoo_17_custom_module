@@ -6,7 +6,7 @@
             <menuitem id="menu_bsms_patient" name="BSMS Patient" action="action_bsms_patient"/>
         </menuitem>
         <menuitem id="menu_bsms_config" name="Configuration">
-            <menuitem id="menu_cancer_type" name="Cancer Types"/>
+            <menuitem id="menu_cancer_type" name="Cancer Types" action="action_cancer_type"/>
             <menuitem id="menu_bed_allocation" name="Bed Allocation" action="action_bed_allocation"/>
             <menuitem id="menu_hospital" name="Hospitals" action="action_cancer_hospital"/>
         </menuitem>
