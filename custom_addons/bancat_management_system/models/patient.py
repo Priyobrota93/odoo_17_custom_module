@@ -1,5 +1,6 @@
 from odoo import fields, models, api
 from datetime import date
+import re
 
 
 class Patient(models.Model):
@@ -8,7 +9,6 @@ class Patient(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _valid_field_parameter(self, field, name):
-        # Allow the 'unique' parameter for fields
         if name == 'unique':
             return True
         return super(Patient, self)._valid_field_parameter(field, name)
@@ -87,30 +87,25 @@ class Patient(models.Model):
         if 'patient_id' not in vals or not vals['patient_id']:
             # Fetch the last patient ID used (to increment it)
             last_patient = self.search([], limit=1, order="patient_id desc")
-            if last_patient:
-                # Extract the numeric part of the last patient_id and increment by 1
-                last_patient_number = int(last_patient.patient_id.split("-")[-1])  # Assuming format like "PAT-1"
-                new_patient_number = last_patient_number + 1
-            else:
-                # If no patient exists, start with 1
-                new_patient_number = 1
-            vals['patient_id'] = f'BANCAT-{new_patient_number}'  # Format as desired (e.g., BANCAT-1)
+            new_patient_number = 1  # Default if no previous patient exists
 
-        return super(Patient, self).create(vals)
+            if last_patient and last_patient.patient_id:
+                match = re.search(r'(\d+)$', last_patient.patient_id)  # Extract only the number at the end
+                if match:
+                    new_patient_number = int(match.group(1)) + 1  # Convert extracted number to integer
 
-    @api.model
-    def create(self, vals):
-        # Generate patient_id if not provided
-        if 'patient_id' not in vals or not vals['patient_id']:
-            last_patient = self.search([], limit=1, order="patient_id desc")
-            last_id = int(last_patient.patient_id.split("-")[-1]) if last_patient else 0
-            vals['patient_id'] = f"BANCAT-{last_id + 1}"
+            vals['patient_id'] = f'BANCAT-D{new_patient_number}'  # Format as desired (e.g., BANCAT-D1)
+
+        
 
         patient = super(Patient, self).create(vals)
+
         # Mark the bed as unavailable after allocation
         if patient.bed_allocation_id:
             patient.bed_allocation_id.is_available = False
         return patient
+
+
 
     document_count = fields.Integer(compute="_compute_document_count", store=True)
 
@@ -132,13 +127,13 @@ class Patient(models.Model):
             },
         }
 
-    @api.model
-    def create(self, vals):
-        # Create a folder for the patient
-        patient = super(Patient, self).create(vals)
-        folder = self.env['documents.folder'].create({
-            'name': patient.name,
-            'description': f"Folder for patient {patient.name}",
-        })
-        patient.document_ids.write({'folder_id': folder.id})
-        return patient
+    # @api.model
+    # def create(self, vals):
+    #     # Create a folder for the patient
+    #     patient = super(Patient, self).create(vals)
+    #     folder = self.env['documents.folder'].create({
+    #         'name': patient.name,
+    #         'description': f"Folder for patient {patient.name}",
+    #     })
+    #     patient.document_ids.write({'folder_id': folder.id})
+    #     return patient

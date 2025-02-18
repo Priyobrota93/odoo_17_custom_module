@@ -2,7 +2,7 @@
 <odoo>
     <menuitem name="BSMS" id="menu_root_bsms_contact" web_icon="bancat_software_management_system,static/description/icon.png">
         <menuitem id="menu_bsms_contact" name="BSMS Contacts">
-            <menuitem id="menu_bsms_donor" name="BSMS Donor" action="action_bsms_patient"/>
+            <menuitem id="menu_bsms_donor" name="BSMS Donor" action="action_bsms_donor"/>
             <menuitem id="menu_bsms_patient" name="BSMS Patient" action="action_bsms_patient"/>
         </menuitem>
         <menuitem id="menu_bsms_config" name="Configuration">

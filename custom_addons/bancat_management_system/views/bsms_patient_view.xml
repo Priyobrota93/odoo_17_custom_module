@@ -8,6 +8,8 @@
 <!--            <field name="view_mode">tree,form</field>-->
 <!--            <field name="domain">[('patient_id', '=', active_id)]</field>-->
 <!--        </record>-->
+
+
         <record id="action_open_documents" model="ir.actions.act_window">
             <field name="name">Patient Documents</field>
             <field name="res_model">documents.document</field>
@@ -81,17 +83,17 @@
                         </div>
 
 
-                        <div class="oe_title">
-                            <h1>
-                                <field name="name" placeholder="Enter full name"/>
+                        <div class="oe_title d-flex justify-between align-items-center">
+                            <h1 class="m-0">
+                                <field name="name" placeholder="Enter Patient name" class="oe_inline"/>
                             </h1>
-                            <div class="oe_avatar">
+                            <div class="me-3">
                                 <field name="profile_image" widget="image" class="oe_avatar" options="{'size': [128, 128]}"/>
                             </div>
                         </div>
                         <group>
                             <group>
-                                <field name="patient_id"/>
+<!--                                <field name="patient_id"/>-->
                                 <field name="dob"/>
                                 <field name="age" readonly="1"/>
                                 <field name="cancer_type"/>

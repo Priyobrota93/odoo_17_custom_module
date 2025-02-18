@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="bsms_donor_tree_view" model="ir.ui.view">
+            <field name="name">bancat.donor.tree</field>
+            <field name="model">bancat.donor</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="donor_id"/>
+                    <field name="name" placeholder="Enter Donor's name"/>
+                    <field name="gender"/>
+                    <field name="dob"/>
+                    <field name="age"/>
+                    <field name="donor_designation"/>
+                    <field name="donor_contact"/>
+
+
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="bsms_donor_form_view" model="ir.ui.view">
+            <field name="name">bancat.donor.form</field>
+            <field name="model">bancat.donor</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <sheet>
+                        <div class="radio_as_buttons">
+                            <group>
+                                <field name="donor_type" widget="radio" class="d-flex"/>
+                            </group>
+                        </div>
+                        <div class="oe_title d-flex align-items-center">
+                            <h1 class="m-0">
+                                <field name="name" placeholder="Enter donor name" class="oe_inline" required="1"/>
+                            </h1>
+                            <div class="me-3">
+                                <field name="profile_image" widget="image" class="oe_avatar" options="{'size': [128, 128]}"/>
+                            </div>
+                        </div>
+
+                        <group >
+                            <group>
+<!--                                <field name="donor_id"/>-->
+                                <field name="dob"/>
+                                <field name="age" readonly="1"/>
+                                <field name="gender"/>
+                                <field name="organization_name" invisible="donor_type == 'individual' or donor_type == 'anonymous'"/>
+
+
+                            </group>
+                            <group >
+                                <field name="donor_designation" invisible="donor_type == 'anonymous'"/>
+                                <field name="donor_contact"/>
+                                <field name="email"/>
+                                <field name="donor_address" invisible="donor_type == 'anonymous'"/>
+                            </group>
+                        </group>
+                        <notebook invisible="donor_type == 'individual' or donor_type == 'anonymous'">
+                            <page string="Contact Person">
+                                <sheet>
+                                    <group>
+                                        <group>
+                                            <field name="contact_name" placeholder="Enter contact name"/>
+                                            <field name="contact_designation"/>
+                                        </group>
+                                        <group>
+                                            <field name="contact_contact"/>
+                                            <field name="contact_email"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="bsms_donor_kanban_view" model="ir.ui.view">
+            <field name="name">bancat.donor.kanban</field>
+            <field name="model">bancat.donor</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="profile_image"/>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="donor_id"/>
+                    <field name="gender"/>
+                    <field name="age"/>
+                    <field name="donor_type"/>
+                    <field name="donor_designation" invisible="donor_type == 'anonymous'"/>
+                    <field name="donor_contact"/>
+
+                    <templates>
+                          <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                        <!-- Profile image covering the left side -->
+                        <t t-if="record.profile_image.raw_value">
+                            <div class="o_kanban_image_fill_left d-block" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}">
+                                <img t-att-src="kanban_image('bancat.donor', 'profile_image', record.id.raw_value)" class="oe_kanban_avatar oe_kanban_image" alt="Profile Image" style="width: 100%; height: 100%; object-fit: cover;"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="o_kanban_image_fill_left d-flex align-items-center justify-content-center bg-100 bg-gradient">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-75 h-75 opacity-50" viewBox="0 0 20 20">
+                                    <g fill="currentColor">
+                                        <path d="M 10 11 C 4.08 11 2 14 2 16 L 2 19 L 18 19 L 18 16 C 18 14 15.92 11 10 11 Z"/>
+                                        <circle cx="10" cy="5.5" r="4.5"/>
+                                    </g>
+                                </svg>
+                            </div>
+                        </t>
+
+                                <div class="oe_kanban_details">
+                                    <strong><field name="name"/></strong>
+                                    <t t-if="record.donor_type.raw_value != 'anonymous'">
+                                        <div><span>Designation: <field name="donor_designation" /></span></div>
+                                    </t>
+                                    <div><span>Donor Id: <field name="donor_id"/></span></div>
+                                    <div><span>Gender: <field name="gender"/></span></div>
+                                    <div><span>Age: <field name="age"/></span></div>
+                                    <div><span>Email: <field name="email"/></span></div>
+                                    <div><span>Contact: <field name="donor_contact"/></span></div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_bsms_donor" model="ir.actions.act_window">
+            <field name="name">Donor</field>
+            <field name="res_model">bancat.donor</field>
+            <field name="view_mode">list,form,kanban</field>
+            <field name="view_id" ref="bsms_donor_kanban_view"/>
+            <field name="help" type="html">
+                <p class='o_view_nocontent_smiling_face'>
+                    Create a donor contact
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

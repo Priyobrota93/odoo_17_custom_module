@@ -1,10 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-        <template id="extend_web_assets_backend" inherit_id="web.assets_backend" name="Extend Web Assets Backend">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/custom_addons/bancat_management_system/static/src/js/list_editable_add_label.js"/>
-            </xpath>
-        </template>
-    </data>
+    <template id="assets_backend_test" inherit_id="web._assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/bancat_management_system/static/src/css/custom_styles.css"/>
+        </xpath>
+    </template>
 </odoo>

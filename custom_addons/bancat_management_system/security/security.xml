@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+        <record id="group_donor_individual" model="res.groups">
+            <field name="name">Individual Donor</field>
+            <field name="category_id" ref="base.module_category_services"/>
+        </record>
+
+        <record id="group_donor_organization" model="res.groups">
+            <field name="name">Organization Donor</field>
+            <field name="category_id" ref="base.module_category_services"/>
+        </record>
+
+        <record id="group_donor_anonymous" model="res.groups">
+            <field name="name">Anonymous Donor</field>
+            <field name="category_id" ref="base.module_category_services"/>
+        </record>
+    </data>
+</odoo>
