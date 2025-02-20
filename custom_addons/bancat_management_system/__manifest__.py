@@ -7,7 +7,7 @@
     "description": """
         A module to manage patient and donor details, bed allocation, and hospital information.
     """,
-    "depends": ["base", "mail", "documents", "web"],
+    "depends": ["base", "mail", "documents", "web","account"],
     "data": [
         # "security/security.xml",
         "security/ir.model.access.csv",
@@ -17,10 +17,13 @@
         "views/bed_allocation_view.xml",
         "views/cancer_hospital_view.xml",
         "views/bsms_attendance_view.xml",
+        "views/contributor_type_view.xml",
         "views/menuitems.xml",
         "data/patient_cancer_type.xml",
         "data/bed_allocation.xml",
-        "data/cancer_hospital.xml"
+        "data/cancer_hospital.xml",
+        "data/contributor_type.xml"
+
     ],
     "assets": {
         "web.assets_backend": [

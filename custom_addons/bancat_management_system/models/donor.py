@@ -40,6 +40,8 @@ class Donor(models.Model):
     contact_designation = fields.Char(string="Designation", tracking=True)
     contact_contact = fields.Char(string="Contact", tracking=True)
     contact_email = fields.Char(string="Email", tracking=True)
+    donor_tier = fields.Many2one('bancat.contributor.type', string="Donor Tier", required=True, tracking=True)
+    donation_ids = fields.One2many('account.account', 'donor_id', string="Donations")
 
 
 

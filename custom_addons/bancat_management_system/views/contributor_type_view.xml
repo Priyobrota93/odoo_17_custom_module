@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id = "contributor_type_tree_view" model="ir.ui.view">
+            <field name="name">bancat.contributor.type.tree</field>
+            <field name ="model">bancat.contributor.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="min_amount"/>
+                    <field name="max_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id = "contributor_type_form_view" model="ir.ui.view">
+            <field name="name">bancat.contributor.type.form</field>
+            <field name ="model">bancat.contributor.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="min_amount"/>
+                            <field name="max_amount"/>
+                        </group>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="action_contributor_type" model="ir.actions.act_window">
+            <field name="name">Contributor Type</field>
+            <field name="res_model">bancat.contributor.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref ="contributor_type_tree_view"/>
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,38 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Bronze Tier -->
+        <record id="bronze_tier" model="bancat.contributor.type">
+            <field name="name">Bronze Tier</field>
+            <field name="min_amount">1.00</field>
+            <field name="max_amount">50000.00</field>
+        </record>
+
+        <!-- Silver Tier -->
+        <record id="silver_tier" model="bancat.contributor.type">
+            <field name="name">Silver Tier</field>
+            <field name="min_amount">50001.00</field>
+            <field name="max_amount">100000.00</field>
+        </record>
+
+        <!-- Gold Tier -->
+        <record id="gold_tier" model="bancat.contributor.type">
+            <field name="name">Gold Tier</field>
+            <field name="min_amount">100001.00</field>
+            <field name="max_amount">300000.00</field>
+        </record>
+
+        <!-- Platinum Tier -->
+        <record id="platinum_tier" model="bancat.contributor.type">
+            <field name="name">Platinum Tier</field>
+            <field name="min_amount">300001.00</field>
+            <field name="max_amount">500000.00</field>
+        </record>
+
+        <!-- Diamond Tier -->
+        <record id="diamond_tier" model="bancat.contributor.type">
+            <field name="name">Diamond Tier</field>
+            <field name="min_amount">500001.00</field>
+            <field name="max_amount">9999999999.00</field>
+        </record>
+    </data>
+</odoo>

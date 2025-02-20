@@ -10,6 +10,8 @@
 <!--        </record>-->
 
 
+
+
         <record id="action_open_documents" model="ir.actions.act_window">
             <field name="name">Patient Documents</field>
             <field name="res_model">documents.document</field>
