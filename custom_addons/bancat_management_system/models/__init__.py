@@ -8,3 +8,4 @@ from . import patient_document
 from . import donor
 from . import contributor_type
 from . import donation
+from . import patient_visit

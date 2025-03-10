@@ -1,4 +1,4 @@
-from odoo import fields, models, api
+from odoo import fields, models, api,SUPERUSER_ID
 from datetime import date
 import re
 
@@ -52,23 +52,34 @@ class Patient(models.Model):
 
     attendance_ids = fields.One2many('bancat.attendance', 'patient_id', string='Attendance Information', auto_join=True,tracking=True)
     document_ids = fields.One2many('documents.document', 'patient_id', string="Documents", copy=True)
-    # document_file = fields.Binary(string="Upload Document", attachment=True)
-    # document_file_name = fields.Char(string="File Name")
-    # atten_name = fields.Char(string='Attendance Name', required=True)
-    # atten_relation_of_patient = fields.Char(string='Relation of Patient', required=True)
-    # atten_address = fields.Text(string='Attendance Address')
-    # atten_contact_number = fields.Char(string='Attendance Contact Number', required=True)
-    #
-    #
-    # atten2_name = fields.Char(string='Attendance-2 Name')
-    # atten2_relation_of_patient = fields.Char(string='Attendance-2 Relation of Patient')
-    # atten2_address = fields.Text(string='Attendance-2 Address')
-    # atten2_contact_number = fields.Char(string=' Attendance-2 Contact Number')
+
+    state = fields.Selection([
+        ('check_in', 'Check In'),
+        ('check_out', 'Check Out')
+    ], string="State", default='check_in', tracking=True)
+    approximate_amount = fields.Float(string="Approximate Amount")
+    start_date = fields.Datetime(string="Start Date", related='create_date', default=fields.Datetime.now, readonly=True)
+    end_date = fields.Datetime(string="End Date")
+
+    # Link to visits (new model)
+    visit_ids = fields.One2many('bancat.patient.visit', 'patient_id', string="Visits")
 
 
-    # show_attendance_form2 = fields.Boolean(string="Show Attendance Form 2", default=False)
+    last_visit_state = fields.Selection([
+        ('check_in', 'Check In'),
+        ('check_out', 'Check Out'),
+    ], string="Visit State", compute="_compute_last_visit_state", store=True)
 
-    # show_add_button = fields.Boolean(string="Show Add Button", default=True)
+    @api.depends('visit_ids.state', 'visit_ids.start_date')
+    def _compute_last_visit_state(self):
+        for patient in self:
+            if patient.visit_ids:
+                # Sort visits by start_date descending and get the state of the latest visit
+                sorted_visits = patient.visit_ids.sorted(
+                    key=lambda v: v.start_date or fields.Datetime.from_string('1900-01-01'), reverse=True)
+                patient.last_visit_state = sorted_visits[0].state
+            else:
+                patient.last_visit_state = False  # or set a default value like 'check_in'
 
     @api.depends('dob')
     def _compute_age(self):
@@ -96,9 +107,17 @@ class Patient(models.Model):
 
             vals['patient_id'] = f'BANCAT-D{new_patient_number}'  # Format as desired (e.g., BANCAT-D1)
 
-        
+        if 'state' not in vals:
+            vals['state'] = 'check_in'
 
         patient = super(Patient, self).create(vals)
+
+        self.env['bancat.patient.visit'].create({
+            'patient_id': patient.id,
+            'state': 'check_in',
+            'start_date': fields.Datetime.now(),
+            # Initialize other visit fields as needed...
+        })
 
         # Mark the bed as unavailable after allocation
         if patient.bed_allocation_id:
@@ -126,6 +145,69 @@ class Patient(models.Model):
                 'default_patient_id': self.id,  # Set default patient when creating new documents
             },
         }
+    # def action_check_out(self):
+    #     self.ensure_one()
+    #     return self.write({'state': 'check_out'})
+    #
+    # def write(self, vals):
+    #     # Capture the state change if present
+    #     res = super(Patient, self).write(vals)
+    #     for record in self:
+    #         # When state changes to check_out and end_date is not already set, capture the write_date as end_date
+    #         if record.state == 'check_out' and not record.end_date:
+    #             record.end_date = record.write_date
+    #     return res
+
+    def action_check_in(self):
+
+        self.ensure_one()
+        # Create a new visit record
+        new_visit = self.env['bancat.patient.visit'].create({
+            'patient_id': self.id,
+            'state': 'check_in',
+            'approximate_amount': self.approximate_amount,
+            # start_date will be set automatically (default)
+        })
+        # Update the patient record
+        self.write({
+            'state': 'check_in',
+            'start_date': fields.Datetime.now(),
+            'end_date': False,
+        })
+        return True
+
+    def action_check_out(self):
+
+        self.ensure_one()
+        now = fields.Datetime.now()
+        self.write({
+            'state': 'check_out',
+            'end_date': now,
+        })
+
+        open_visits = self.visit_ids.filtered(lambda v: v.state == 'check_in')
+        if open_visits:
+            open_visits[-1].write({
+                'state': 'check_out',
+                'end_date': now,
+            })
+        return True
+
+    def action_open_visit(self):
+
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Patient Visits',
+            'res_model': 'bancat.patient.visit',
+            'view_mode': 'tree,form',
+            # 'views': [(self.env.ref('bancat_management_system.bsms_patient_visit_tree_view').id, 'tree'), (False, 'form')],
+            'domain': [('patient_id', '=', self.id)],
+        }
+
+
+
+
 
     # @api.model
     # def create(self, vals):

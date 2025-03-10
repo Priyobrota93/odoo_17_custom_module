@@ -7190,6 +7190,95 @@ return new Promise(()=>{});}
 this.state.error=data.error||false;this.state.success=!data.error&&{message:data.message,redirectUrl:data.redirect_url,redirectMessage:data.redirect_message,};}}
 registry.category("public_components").add("portal.signature_form",SignatureForm);return __exports;});;
 
+/* /account/static/src/js/account_portal_sidebar.js */
+odoo.define('@account/js/account_portal_sidebar',['@web/legacy/js/core/dom','@web/legacy/js/public/public_widget','@portal/js/portal_sidebar'],function(require){'use strict';let __exports={};const dom=require("@web/legacy/js/core/dom")[Symbol.for("default")];const publicWidget=require("@web/legacy/js/public/public_widget")[Symbol.for("default")];const PortalSidebar=require("@portal/js/portal_sidebar")[Symbol.for("default")];publicWidget.registry.AccountPortalSidebar=PortalSidebar.extend({selector:'.o_portal_invoice_sidebar',events:{'click .o_portal_invoice_print':'_onPrintInvoice',},start:function(){var def=this._super.apply(this,arguments);var $invoiceHtml=this.$el.find('iframe#invoice_html');var updateIframeSize=this._updateIframeSize.bind(this,$invoiceHtml);$(window).on('resize',updateIframeSize);var iframeDoc=$invoiceHtml[0].contentDocument||$invoiceHtml[0].contentWindow.document;if(iframeDoc.readyState==='complete'){updateIframeSize();}else{$invoiceHtml.on('load',updateIframeSize);}
+return def;},_updateIframeSize:function($el){var $wrapwrap=$el.contents().find('div#wrapwrap');$el.height(0);$el.height($wrapwrap[0].scrollHeight);const isAnchor=/^#[\w-]+$/.test(window.location.hash)
+if(!isAnchor){return;}
+var $target=$(window.location.hash);if(!$target.length){return;}
+dom.scrollTo($target[0],{duration:0});},_onPrintInvoice:function(ev){ev.preventDefault();var href=$(ev.currentTarget).attr('href');this._printIframeContent(href);},});return __exports;});;
+
+/* /account/static/src/js/account_portal.js */
+odoo.define('@account/js/account_portal',['@portal/js/portal'],function(require){'use strict';let __exports={};const{PortalHomeCounters}=require('@portal/js/portal');PortalHomeCounters.include({_getCountersAlwaysDisplayed(){return this._super(...arguments).concat(['invoice_count']);},});return __exports;});;
+
+/* /account_online_synchronization/static/src/js/online_sync_portal.js */
+odoo.define('@account_online_synchronization/js/online_sync_portal',['@web/legacy/js/public/public_widget','@web/core/assets'],function(require){'use strict';let __exports={};const publicWidget=require("@web/legacy/js/public/public_widget")[Symbol.for("default")];const{loadJS}=require("@web/core/assets");publicWidget.registry.OnlineSyncPortal=publicWidget.Widget.extend({selector:'.oe_online_sync',events:Object.assign({},{'click #renew_consent_button':'_onRenewConsent',}),OdooFinConnector:function(parent,action){const modeRegexp=/^[a-z0-9-_]+$/i;if(!modeRegexp.test(action.params.proxyMode)){return;}
+const url='https://'+action.params.proxyMode+'.odoofin.com/proxy/v1/odoofin_link';loadJS(url).then(()=>{const params={data:action.params,proxyMode:action.params.proxyMode,onEvent:function(event,data){switch(event){case'success':const processUrl=window.location.pathname+'/complete'+window.location.search;$('.js_reconnect').toggleClass('d-none');$.post(processUrl,{csrf_token:odoo.csrf_token});default:return;}},};OdooFin.create(params);OdooFin.open();});return;},_onRenewConsent:async function(ev){ev.preventDefault();const action=JSON.parse($(ev.currentTarget).attr('iframe-params'));return this.OdooFinConnector(this,action);},});__exports[Symbol.for("default")]={OnlineSyncPortal:publicWidget.registry.OnlineSyncPortal,};return __exports;});;
+
+/* /payment/static/lib/jquery.payment/jquery.payment.js */
+(function(){var $,cardFromNumber,cardFromType,cards,defaultFormat,formatBackCardNumber,formatBackExpiry,formatCardNumber,formatExpiry,formatForwardExpiry,formatForwardSlashAndSpace,hasTextSelected,luhnCheck,reFormatCVC,reFormatCardNumber,reFormatExpiry,reFormatNumeric,replaceFullWidthChars,restrictCVC,restrictCardNumber,restrictExpiry,restrictNumeric,safeVal,setCardType,__slice=[].slice,__indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i;}return-1;};$=window.jQuery||window.Zepto||window.$;$.payment={};$.payment.fn={};$.fn.payment=function(){var args,method;method=arguments[0],args=2<=arguments.length?__slice.call(arguments,1):[];return $.payment.fn[method].apply(this,args);};defaultFormat=/(\d{1,4})/g;$.payment.cards=cards=[{type:'maestro',patterns:[5018,502,503,506,56,58,639,6220,67],format:defaultFormat,length:[12,13,14,15,16,17,18,19],cvcLength:[3],luhn:true},{type:'forbrugsforeningen',patterns:[600],format:defaultFormat,length:[16],cvcLength:[3],luhn:true},{type:'dankort',patterns:[5019],format:defaultFormat,length:[16],cvcLength:[3],luhn:true},{type:'visa',patterns:[4],format:defaultFormat,length:[13,16],cvcLength:[3],luhn:true},{type:'mastercard',patterns:[51,52,53,54,55,22,23,24,25,26,27],format:defaultFormat,length:[16],cvcLength:[3],luhn:true},{type:'amex',patterns:[34,37],format:/(\d{1,4})(\d{1,6})?(\d{1,5})?/,length:[15],cvcLength:[3,4],luhn:true},{type:'dinersclub',patterns:[30,36,38,39],format:/(\d{1,4})(\d{1,6})?(\d{1,4})?/,length:[14],cvcLength:[3],luhn:true},{type:'discover',patterns:[60,64,65,622],format:defaultFormat,length:[16],cvcLength:[3],luhn:true},{type:'unionpay',patterns:[62,88],format:defaultFormat,length:[16,17,18,19],cvcLength:[3],luhn:false},{type:'jcb',patterns:[35],format:defaultFormat,length:[16],cvcLength:[3],luhn:true}];cardFromNumber=function(num){var card,p,pattern,_i,_j,_len,_len1,_ref;num=(num+'').replace(/\D/g,'');for(_i=0,_len=cards.length;_i<_len;_i++){card=cards[_i];_ref=card.patterns;for(_j=0,_len1=_ref.length;_j<_len1;_j++){pattern=_ref[_j];p=pattern+'';if(num.substr(0,p.length)===p){return card;}}}};cardFromType=function(type){var card,_i,_len;for(_i=0,_len=cards.length;_i<_len;_i++){card=cards[_i];if(card.type===type){return card;}}};luhnCheck=function(num){var digit,digits,odd,sum,_i,_len;odd=true;sum=0;digits=(num+'').split('').reverse();for(_i=0,_len=digits.length;_i<_len;_i++){digit=digits[_i];digit=parseInt(digit,10);if((odd=!odd)){digit*=2;}
+if(digit>9){digit-=9;}
+sum+=digit;}
+return sum%10===0;};hasTextSelected=function($target){var _ref;if(($target.prop('selectionStart')!=null)&&$target.prop('selectionStart')!==$target.prop('selectionEnd')){return true;}
+if((typeof document!=="undefined"&&document!==null?(_ref=document.selection)!=null?_ref.createRange:void 0:void 0)!=null){if(document.selection.createRange().text){return true;}}
+return false;};safeVal=function(value,$target){var currPair,cursor,digit,error,last,prevPair;try{cursor=$target.prop('selectionStart');}catch(_error){error=_error;cursor=null;}
+last=$target.val();$target.val(value);if(cursor!==null&&$target.is(":focus")){if(cursor===last.length){cursor=value.length;}
+if(last!==value){prevPair=last.slice(cursor-1,+cursor+1||9e9);currPair=value.slice(cursor-1,+cursor+1||9e9);digit=value[cursor];if(/\d/.test(digit)&&prevPair===(""+digit+" ")&&currPair===(" "+digit)){cursor=cursor+1;}}
+$target.prop('selectionStart',cursor);return $target.prop('selectionEnd',cursor);}};replaceFullWidthChars=function(str){var chars,chr,fullWidth,halfWidth,idx,value,_i,_len;if(str==null){str='';}
+fullWidth='\uff10\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19';halfWidth='0123456789';value='';chars=str.split('');for(_i=0,_len=chars.length;_i<_len;_i++){chr=chars[_i];idx=fullWidth.indexOf(chr);if(idx>-1){chr=halfWidth[idx];}
+value+=chr;}
+return value;};reFormatNumeric=function(e){var $target;$target=$(e.currentTarget);return setTimeout(function(){var value;value=$target.val();value=replaceFullWidthChars(value);value=value.replace(/\D/g,'');return safeVal(value,$target);});};reFormatCardNumber=function(e){var $target;$target=$(e.currentTarget);return setTimeout(function(){var value;value=$target.val();value=replaceFullWidthChars(value);value=$.payment.formatCardNumber(value);return safeVal(value,$target);});};formatCardNumber=function(e){var $target,card,digit,length,re,upperLength,value;digit=String.fromCharCode(e.which);if(!/^\d+$/.test(digit)){return;}
+$target=$(e.currentTarget);value=$target.val();card=cardFromNumber(value+digit);length=(value.replace(/\D/g,'')+digit).length;upperLength=16;if(card){upperLength=card.length[card.length.length-1];}
+if(length>=upperLength){return;}
+if(($target.prop('selectionStart')!=null)&&$target.prop('selectionStart')!==value.length){return;}
+if(card&&card.type==='amex'){re=/^(\d{4}|\d{4}\s\d{6})$/;}else{re=/(?:^|\s)(\d{4})$/;}
+if(re.test(value)){e.preventDefault();return setTimeout(function(){return $target.val(value+' '+digit);});}else if(re.test(value+digit)){e.preventDefault();return setTimeout(function(){return $target.val(value+digit+' ');});}};formatBackCardNumber=function(e){var $target,value;$target=$(e.currentTarget);value=$target.val();if(e.which!==8){return;}
+if(($target.prop('selectionStart')!=null)&&$target.prop('selectionStart')!==value.length){return;}
+if(/\d\s$/.test(value)){e.preventDefault();return setTimeout(function(){return $target.val(value.replace(/\d\s$/,''));});}else if(/\s\d?$/.test(value)){e.preventDefault();return setTimeout(function(){return $target.val(value.replace(/\d$/,''));});}};reFormatExpiry=function(e){var $target;$target=$(e.currentTarget);return setTimeout(function(){var value;value=$target.val();value=replaceFullWidthChars(value);value=$.payment.formatExpiry(value);return safeVal(value,$target);});};formatExpiry=function(e){var $target,digit,val;digit=String.fromCharCode(e.which);if(!/^\d+$/.test(digit)){return;}
+$target=$(e.currentTarget);val=$target.val()+digit;if(/^\d$/.test(val)&&(val!=='0'&&val!=='1')){e.preventDefault();return setTimeout(function(){return $target.val("0"+val+" / ");});}else if(/^\d\d$/.test(val)){e.preventDefault();return setTimeout(function(){var m1,m2;m1=parseInt(val[0],10);m2=parseInt(val[1],10);if(m2>2&&m1!==0){return $target.val("0"+m1+" / "+m2);}else{return $target.val(""+val+" / ");}});}};formatForwardExpiry=function(e){var $target,digit,val;digit=String.fromCharCode(e.which);if(!/^\d+$/.test(digit)){return;}
+$target=$(e.currentTarget);val=$target.val();if(/^\d\d$/.test(val)){return $target.val(""+val+" / ");}};formatForwardSlashAndSpace=function(e){var $target,val,which;which=String.fromCharCode(e.which);if(!(which==='/'||which===' ')){return;}
+$target=$(e.currentTarget);val=$target.val();if(/^\d$/.test(val)&&val!=='0'){return $target.val("0"+val+" / ");}};formatBackExpiry=function(e){var $target,value;$target=$(e.currentTarget);value=$target.val();if(e.which!==8){return;}
+if(($target.prop('selectionStart')!=null)&&$target.prop('selectionStart')!==value.length){return;}
+if(/\d\s\/\s$/.test(value)){e.preventDefault();return setTimeout(function(){return $target.val(value.replace(/\d\s\/\s$/,''));});}};reFormatCVC=function(e){var $target;$target=$(e.currentTarget);return setTimeout(function(){var value;value=$target.val();value=replaceFullWidthChars(value);value=value.replace(/\D/g,'').slice(0,4);return safeVal(value,$target);});};restrictNumeric=function(e){var input;if(e.metaKey||e.ctrlKey){return true;}
+if(e.which===32){return false;}
+if(e.which===0){return true;}
+if(e.which<33){return true;}
+input=String.fromCharCode(e.which);return!!/[\d\s]/.test(input);};restrictCardNumber=function(e){var $target,card,digit,value;$target=$(e.currentTarget);digit=String.fromCharCode(e.which);if(!/^\d+$/.test(digit)){return;}
+if(hasTextSelected($target)){return;}
+value=($target.val()+digit).replace(/\D/g,'');card=cardFromNumber(value);if(card){return value.length<=card.length[card.length.length-1];}else{return value.length<=16;}};restrictExpiry=function(e){var $target,digit,value;$target=$(e.currentTarget);digit=String.fromCharCode(e.which);if(!/^\d+$/.test(digit)){return;}
+if(hasTextSelected($target)){return;}
+value=$target.val()+digit;value=value.replace(/\D/g,'');if(value.length>6){return false;}};restrictCVC=function(e){var $target,digit,val;$target=$(e.currentTarget);digit=String.fromCharCode(e.which);if(!/^\d+$/.test(digit)){return;}
+if(hasTextSelected($target)){return;}
+val=$target.val()+digit;return val.length<=4;};setCardType=function(e){var $target,allTypes,card,cardType,val;$target=$(e.currentTarget);val=$target.val();cardType=$.payment.cardType(val)||'unknown';if(!$target.hasClass(cardType)){allTypes=(function(){var _i,_len,_results;_results=[];for(_i=0,_len=cards.length;_i<_len;_i++){card=cards[_i];_results.push(card.type);}
+return _results;})();$target.removeClass('unknown');$target.removeClass(allTypes.join(' '));$target.addClass(cardType);$target.toggleClass('identified',cardType!=='unknown');return $target.trigger('payment.cardType',cardType);}};$.payment.fn.formatCardCVC=function(){this.on('keypress',restrictNumeric);this.on('keypress',restrictCVC);this.on('paste',reFormatCVC);this.on('change',reFormatCVC);this.on('input',reFormatCVC);return this;};$.payment.fn.formatCardExpiry=function(){this.on('keypress',restrictNumeric);this.on('keypress',restrictExpiry);this.on('keypress',formatExpiry);this.on('keypress',formatForwardSlashAndSpace);this.on('keypress',formatForwardExpiry);this.on('keydown',formatBackExpiry);this.on('change',reFormatExpiry);this.on('input',reFormatExpiry);return this;};$.payment.fn.formatCardNumber=function(){this.on('keypress',restrictNumeric);this.on('keypress',restrictCardNumber);this.on('keypress',formatCardNumber);this.on('keydown',formatBackCardNumber);this.on('keyup',setCardType);this.on('paste',reFormatCardNumber);this.on('change',reFormatCardNumber);this.on('input',reFormatCardNumber);this.on('input',setCardType);return this;};$.payment.fn.restrictNumeric=function(){this.on('keypress',restrictNumeric);this.on('paste',reFormatNumeric);this.on('change',reFormatNumeric);this.on('input',reFormatNumeric);return this;};$.payment.fn.cardExpiryVal=function(){return $.payment.cardExpiryVal($(this).val());};$.payment.cardExpiryVal=function(value){var month,prefix,year,_ref;_ref=value.split(/[\s\/]+/,2),month=_ref[0],year=_ref[1];if((year!=null?year.length:void 0)===2&&/^\d+$/.test(year)){prefix=(new Date).getFullYear();prefix=prefix.toString().slice(0,2);year=prefix+year;}
+month=parseInt(month,10);year=parseInt(year,10);return{month:month,year:year};};$.payment.validateCardNumber=function(num){var card,_ref;num=(num+'').replace(/\s+|-/g,'');if(!/^\d+$/.test(num)){return false;}
+card=cardFromNumber(num);if(!card){return false;}
+return(_ref=num.length,__indexOf.call(card.length,_ref)>=0)&&(card.luhn===false||luhnCheck(num));};$.payment.validateCardExpiry=function(month,year){var currentTime,expiry,_ref;if(typeof month==='object'&&'month'in month){_ref=month,month=_ref.month,year=_ref.year;}
+if(!(month&&year)){return false;}
+month=$.trim(month);year=$.trim(year);if(!/^\d+$/.test(month)){return false;}
+if(!/^\d+$/.test(year)){return false;}
+if(!((1<=month&&month<=12))){return false;}
+if(year.length===2){if(year<70){year="20"+year;}else{year="19"+year;}}
+if(year.length!==4){return false;}
+expiry=new Date(year,month);currentTime=new Date;expiry.setMonth(expiry.getMonth()-1);expiry.setMonth(expiry.getMonth()+1,1);return expiry>currentTime;};$.payment.validateCardCVC=function(cvc,type){var card,_ref;cvc=$.trim(cvc);if(!/^\d+$/.test(cvc)){return false;}
+card=cardFromType(type);if(card!=null){return _ref=cvc.length,__indexOf.call(card.cvcLength,_ref)>=0;}else{return cvc.length>=3&&cvc.length<=4;}};$.payment.cardType=function(num){var _ref;if(!num){return null;}
+return((_ref=cardFromNumber(num))!=null?_ref.type:void 0)||null;};$.payment.formatCardNumber=function(num){var card,groups,upperLength,_ref;num=num.replace(/\D/g,'');card=cardFromNumber(num);if(!card){return num;}
+upperLength=card.length[card.length.length-1];num=num.slice(0,upperLength);if(card.format.global){return(_ref=num.match(card.format))!=null?_ref.join(' '):void 0;}else{groups=card.format.exec(num);if(groups==null){return;}
+groups.shift();groups=$.grep(groups,function(n){return n;});return groups.join(' ');}};$.payment.formatExpiry=function(expiry){var mon,parts,sep,year;parts=expiry.match(/^\D*(\d{1,2})(\D+)?(\d{1,4})?/);if(!parts){return'';}
+mon=parts[1]||'';sep=parts[2]||'';year=parts[3]||'';if(year.length>0){sep=' / ';}else if(sep===' /'){mon=mon.substring(0,1);sep='';}else if(mon.length===2||sep.length>0){sep=' / ';}else if(mon.length===1&&(mon!=='0'&&mon!=='1')){mon="0"+mon;sep=' / ';}
+return mon+sep+year;};}).call(this);;
+
+/* /payment/static/src/js/express_checkout_form.js */
+odoo.define('@payment/js/express_checkout_form',['@web/legacy/js/public/public_widget','@odoo/owl'],function(require){'use strict';let __exports={};const publicWidget=require('@web/legacy/js/public/public_widget')[Symbol.for("default")];const{Component}=require('@odoo/owl');publicWidget.registry.PaymentExpressCheckoutForm=publicWidget.Widget.extend({selector:'form[name="o_payment_express_checkout_form"]',start:async function(){await this._super(...arguments);this.paymentContext={};Object.assign(this.paymentContext,this.el.dataset);this.paymentContext.shippingInfoRequired=!!this.paymentContext['shippingInfoRequired'];const expressCheckoutForms=this._getExpressCheckoutForms();for(const expressCheckoutForm of expressCheckoutForms){await this._prepareExpressCheckoutForm(expressCheckoutForm.dataset);}
+Component.env.bus.addEventListener('cart_amount_changed',(ev)=>this._updateAmount(...ev.detail));},_getExpressCheckoutForms(){return document.querySelectorAll('form[name="o_payment_express_checkout_form"] div[name="o_express_checkout_container"]');},async _prepareExpressCheckoutForm(providerData){},_prepareTransactionRouteParams(providerId){return{'provider_id':parseInt(providerId),'payment_method_id':parseInt(this.paymentContext['paymentMethodUnknownId']),'token_id':null,'flow':'direct','tokenization_requested':false,'landing_route':this.paymentContext['landingRoute'],'access_token':this.paymentContext['accessToken'],'csrf_token':odoo.csrf_token,};},_updateAmount(newAmount,newMinorAmount){this.paymentContext.amount=parseFloat(newAmount);this.paymentContext.minorAmount=parseInt(newMinorAmount);this._getExpressCheckoutForms().forEach(form=>{if(newAmount==0){form.classList.add('d-none')}
+else{form.classList.remove('d-none')}})},});const paymentExpressCheckoutForm=__exports.paymentExpressCheckoutForm=publicWidget.registry.PaymentExpressCheckoutForm;return __exports;});;
+
+/* /payment/static/src/js/payment_button.js */
+odoo.define('@payment/js/payment_button',['@web/legacy/js/public/public_widget','@odoo/owl'],function(require){'use strict';let __exports={};const publicWidget=require('@web/legacy/js/public/public_widget')[Symbol.for("default")];const{Component}=require("@odoo/owl");publicWidget.registry.PaymentButton=publicWidget.Widget.extend({selector:'button[name="o_payment_submit_button"]',async start(){await this._super(...arguments);this.paymentButton=this.el;this.iconClass=this.paymentButton.dataset.iconClass;this._enable();Component.env.bus.addEventListener('enablePaymentButton',this._enable.bind(this));Component.env.bus.addEventListener('disablePaymentButton',this._disable.bind(this));Component.env.bus.addEventListener('hidePaymentButton',this._hide.bind(this));Component.env.bus.addEventListener('showPaymentButton',this._show.bind(this));},_enable(){if(this._canSubmit()){this.paymentButton.disabled=false;}},_canSubmit(){const paymentForm=document.querySelector('#o_payment_form');if(!paymentForm){return true;}
+return document.querySelectorAll('input[name="o_payment_radio"]:checked').length===1;},_disable(){this.paymentButton.disabled=true;},_hide(){this.paymentButton.classList.add('d-none');},_show(){this.paymentButton.classList.remove('d-none');},});__exports[Symbol.for("default")]=publicWidget.registry.PaymentButton;return __exports;});;
+
+/* /payment/static/src/js/payment_form.js */
+odoo.define('@payment/js/payment_form',['@odoo/owl','@web/legacy/js/public/public_widget','@web/core/browser/browser','@web/core/confirmation_dialog/confirmation_dialog','@web/core/l10n/translation','@web/core/utils/render','@web/core/network/rpc_service'],function(require){'use strict';let __exports={};const{Component}=require('@odoo/owl');const publicWidget=require('@web/legacy/js/public/public_widget')[Symbol.for("default")];const{browser}=require('@web/core/browser/browser');const{ConfirmationDialog}=require('@web/core/confirmation_dialog/confirmation_dialog');const{_t}=require('@web/core/l10n/translation');const{renderToMarkup}=require('@web/core/utils/render');const{RPCError}=require('@web/core/network/rpc_service');publicWidget.registry.PaymentForm=publicWidget.Widget.extend({selector:'#o_payment_form',events:Object.assign({},publicWidget.Widget.prototype.events,{'click [name="o_payment_radio"]':'_selectPaymentOption','click [name="o_payment_delete_token"]':'_fetchTokenData','click [name="o_payment_expand_button"]':'_hideExpandButton','click [name="o_payment_submit_button"]':'_submitForm',}),init(){this._super(...arguments);this.rpc=this.bindService("rpc");this.orm=this.bindService("orm");},async start(){this.paymentContext={};Object.assign(this.paymentContext,this.el.dataset);await this._super(...arguments);const checkedRadio=document.querySelector('input[name="o_payment_radio"]:checked');if(checkedRadio){await this._expandInlineForm(checkedRadio);this._enableButton(false);}else{this._setPaymentFlow();}
+this.$('[data-bs-toggle="tooltip"]').tooltip();},async _selectPaymentOption(ev){this._showInputs();this._disableButton();const checkedRadio=ev.target;await this._expandInlineForm(checkedRadio);this._enableButton(false);},_fetchTokenData(ev){ev.preventDefault();const linkedRadio=document.getElementById(ev.currentTarget.dataset['linkedRadio']);const tokenId=this._getPaymentOptionId(linkedRadio);this.orm.call('payment.token','get_linked_records_info',[tokenId],).then(linkedRecordsInfo=>{this._challengeTokenDeletion(tokenId,linkedRecordsInfo);}).catch(error=>{if(error instanceof RPCError){this._displayErrorDialog(_t("Cannot delete payment method"),error.data.message);}else{return Promise.reject(error);}});},_hideExpandButton(ev){ev.target.classList.add('d-none');},async _submitForm(ev){ev.stopPropagation();ev.preventDefault();const checkedRadio=this.el.querySelector('input[name="o_payment_radio"]:checked');this._disableButton(true);const flow=this.paymentContext.flow=this._getPaymentFlow(checkedRadio);const paymentOptionId=this.paymentContext.paymentOptionId=this._getPaymentOptionId(checkedRadio);if(flow==='token'&&this.paymentContext['assignTokenRoute']){await this._assignToken(paymentOptionId);}else{const providerCode=this.paymentContext.providerCode=this._getProviderCode(checkedRadio);const pmCode=this.paymentContext.paymentMethodCode=this._getPaymentMethodCode(checkedRadio);this.paymentContext.providerId=this._getProviderId(checkedRadio);if(this._getPaymentOptionType(checkedRadio)==='token'){this.paymentContext.tokenId=paymentOptionId;}else{this.paymentContext.paymentMethodId=paymentOptionId;}
+const inlineForm=this._getInlineForm(checkedRadio);this.paymentContext.tokenizationRequested=inlineForm?.querySelector('[name="o_payment_tokenize_checkbox"]')?.checked??this.paymentContext['mode']==='validation';await this._initiatePaymentFlow(providerCode,paymentOptionId,pmCode,flow);}},_enableButton(unblockUI=true){Component.env.bus.trigger('enablePaymentButton');if(unblockUI){this.call('ui','unblock');}},_disableButton(blockUI=false){Component.env.bus.trigger('disablePaymentButton');if(blockUI){this.call('ui','block');}},_showInputs(){const tokenizeContainer=this.el.querySelector('[name="o_payment_tokenize_container"]');tokenizeContainer?.classList.remove('d-none');Component.env.bus.trigger('showPaymentButton');},_hideInputs(){const tokenizeContainer=this.el.querySelector('[name="o_payment_tokenize_container"]');tokenizeContainer?.classList.add('d-none');Component.env.bus.trigger('hidePaymentButton');},async _expandInlineForm(radio){this._collapseInlineForms();this._setPaymentFlow();const providerId=this._getProviderId(radio);const providerCode=this._getProviderCode(radio);const paymentOptionId=this._getPaymentOptionId(radio);const paymentMethodCode=this._getPaymentMethodCode(radio);const flow=this._getPaymentFlow(radio);await this._prepareInlineForm(providerId,providerCode,paymentOptionId,paymentMethodCode,flow);const inlineForm=this._getInlineForm(radio);if(inlineForm&&inlineForm.children.length>0){inlineForm.classList.remove('d-none');}},async _prepareInlineForm(providerId,providerCode,paymentOptionId,paymentMethodCode,flow){},_collapseInlineForms(){this.el.querySelectorAll('[name="o_payment_inline_form"]').forEach(inlineForm=>{inlineForm.classList.add('d-none');});},_displayErrorDialog(title,errorMessage=''){this.call('dialog','add',ConfirmationDialog,{title:title,body:errorMessage||""});},_challengeTokenDeletion(tokenId,linkedRecordsInfo){const body=renderToMarkup('payment.deleteTokenDialog',{linkedRecordsInfo});this.call('dialog','add',ConfirmationDialog,{title:_t("Warning!"),body,confirmLabel:_t("Confirm Deletion"),confirm:()=>this._archiveToken(tokenId),cancel:()=>{},});},_setPaymentFlow(flow='redirect'){if(['redirect','direct','token'].includes(flow)){this.paymentContext.flow=flow;}else{console.warn(`The value ${flow} is not a supported flow. Falling back to redirect.`);this.paymentContext.flow='redirect';}},async _assignToken(tokenId){this.rpc(this.paymentContext['assignTokenRoute'],{'token_id':tokenId,'access_token':this.paymentContext['accessToken'],}).then(()=>{window.location=this.paymentContext['landingRoute'];}).catch(error=>{if(error instanceof RPCError){this._displayErrorDialog(_t("Cannot save payment method"),error.data.message);this._enableButton();}else{return Promise.reject(error);}});},async _initiatePaymentFlow(providerCode,paymentOptionId,paymentMethodCode,flow){this.rpc(this.paymentContext['transactionRoute'],this._prepareTransactionRouteParams(),).then(processingValues=>{if(flow==='redirect'){this._processRedirectFlow(providerCode,paymentOptionId,paymentMethodCode,processingValues);}else if(flow==='direct'){this._processDirectFlow(providerCode,paymentOptionId,paymentMethodCode,processingValues);}else if(flow==='token'){this._processTokenFlow(providerCode,paymentOptionId,paymentMethodCode,processingValues);}}).catch(error=>{if(error instanceof RPCError){this._displayErrorDialog(_t("Payment processing failed"),error.data.message);this._enableButton();}else{return Promise.reject(error);}});},_prepareTransactionRouteParams(){let transactionRouteParams={'provider_id':this.paymentContext.providerId,'payment_method_id':this.paymentContext.paymentMethodId??null,'token_id':this.paymentContext.tokenId??null,'amount':this.paymentContext['amount']!==undefined?parseFloat(this.paymentContext['amount']):null,'flow':this.paymentContext['flow'],'tokenization_requested':this.paymentContext['tokenizationRequested'],'landing_route':this.paymentContext['landingRoute'],'is_validation':this.paymentContext['mode']==='validation','access_token':this.paymentContext['accessToken'],'csrf_token':odoo.csrf_token,};if(this.paymentContext['transactionRoute']==='/payment/transaction'){Object.assign(transactionRouteParams,{'currency_id':this.paymentContext['currencyId']?parseInt(this.paymentContext['currencyId']):null,'partner_id':parseInt(this.paymentContext['partnerId']),'reference_prefix':this.paymentContext['referencePrefix']?.toString(),});}
+return transactionRouteParams;},_processRedirectFlow(providerCode,paymentOptionId,paymentMethodCode,processingValues){const div=document.createElement('div');div.innerHTML=processingValues['redirect_form_html'];const redirectForm=div.querySelector('form');redirectForm.setAttribute('id','o_payment_redirect_form');redirectForm.setAttribute('target','_top');document.body.appendChild(redirectForm);redirectForm.submit();},_processDirectFlow(providerCode,paymentOptionId,paymentMethodCode,processingValues){},_processTokenFlow(providerCode,paymentOptionId,paymentMethodCode,processingValues){window.location='/payment/status';},_archiveToken(tokenId){this.rpc('/payment/archive_token',{'token_id':tokenId,}).then(()=>{browser.location.reload();}).catch(error=>{if(error instanceof RPCError){this._displayErrorDialog(_t("Cannot delete payment method"),error.data.message);}else{return Promise.reject(error);}});},_getInlineForm(radio){const inlineFormContainer=radio.closest('[name="o_payment_option"]');return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');},_getPaymentFlow(radio){if(this._getPaymentOptionType(radio)==='token'||this.paymentContext.flow==='token'){return'token';}else if(this.paymentContext.flow==='redirect'){return'redirect';}else{return'direct';}},_getPaymentMethodCode(radio){return radio.dataset['paymentMethodCode'];},_getPaymentOptionId(radio){return Number(radio.dataset['paymentOptionId']);},_getPaymentOptionType(radio){return radio.dataset['paymentOptionType'];},_getProviderId(radio){return Number(radio.dataset['providerId']);},_getProviderCode(radio){return radio.dataset['providerCode'];},_getProviderState(radio){return radio.dataset['providerState'];},});__exports[Symbol.for("default")]=publicWidget.registry.PaymentForm;return __exports;});;
+
+/* /payment/static/src/js/post_processing.js */
+odoo.define('@payment/js/post_processing',['@web/legacy/js/public/public_widget','@web/core/utils/render','@odoo/owl','@web/core/currency','@web/core/l10n/translation','@web/core/network/rpc_service'],function(require){'use strict';let __exports={};const publicWidget=require('@web/legacy/js/public/public_widget')[Symbol.for("default")];const{renderToElement}=require('@web/core/utils/render');const{markup}=require("@odoo/owl");const{formatCurrency}=require("@web/core/currency");const{_t}=require('@web/core/l10n/translation');const{ConnectionLostError,RPCError}=require('@web/core/network/rpc_service');publicWidget.registry.PaymentPostProcessing=publicWidget.Widget.extend({selector:'div[name="o_payment_status"]',timeout:0,pollCount:0,init(){this._super(...arguments);this.rpc=this.bindService("rpc");},async start(){this.call('ui','block',{'message':_t("We are processing your payment. Please wait."),});this._poll();return this._super.apply(this,arguments);},_poll(){this._updateTimeout();setTimeout(()=>{const self=this;this.rpc('/payment/status/poll',{'csrf_token':odoo.csrf_token,}).then(postProcessingValues=>{let{state,display_message,landing_route}=postProcessingValues;if(display_message){postProcessingValues.display_message=markup(display_message);}
+this._renderTemplate('payment.transactionDetails',{...postProcessingValues,formatCurrency});if(self._getFinalStates(postProcessingValues['provider_code']).includes(state)){window.location=landing_route;}else{self._poll();}}).catch(error=>{if(error instanceof RPCError){switch(error.data.message){case'retry':self._poll();break;case'tx_not_found':self._renderTemplate('payment.tx_not_found');break;default:self._renderTemplate('payment.exception',{error_message:error.data.message});break;}}else if(error instanceof ConnectionLostError){self._renderTemplate('payment.rpc_error');self._poll();}else{return Promise.reject(error);}});},this.timeout);},_getFinalStates(providerCode){return['authorized','done'];},_updateTimeout(){if(this.pollCount>=1&&this.pollCount<10){this.timeout=3000;}
+if(this.pollCount>=10&&this.pollCount<20){this.timeout=10000;}
+else if(this.pollCount>=20){this.timeout=30000;}
+this.pollCount++;},_renderTemplate(xmlid,display_values={}){this.call('ui','unblock');const statusContainer=document.querySelector('div[name="o_payment_status_content"]');statusContainer.innerHTML=renderToElement(xmlid,display_values).innerHTML;},});__exports[Symbol.for("default")]=publicWidget.registry.PaymentPostProcessing;return __exports;});;
+
 /* /auth_totp_portal/static/src/js/totp_frontend.js */
 odoo.define('@auth_totp_portal/js/totp_frontend',['@web/core/l10n/translation','@odoo/owl','@portal/js/components/input_confirmation_dialog/input_confirmation_dialog','@portal/js/portal_security','@web/legacy/js/public/public_widget','@web/session','@web/core/browser/browser'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{markup}=require("@odoo/owl");const{InputConfirmationDialog}=require("@portal/js/components/input_confirmation_dialog/input_confirmation_dialog");const{handleCheckIdentity}=require("@portal/js/portal_security");const publicWidget=require("@web/legacy/js/public/public_widget")[Symbol.for("default")];const{session}=require("@web/session");const{browser}=require("@web/core/browser/browser");function fromField(f,record){switch(f.getAttribute('name')){case'qrcode':const qrcode=document.createElement('img');qrcode.setAttribute('class','img img-fluid');qrcode.setAttribute('src','data:image/png;base64,'+record['qrcode']);return qrcode;case'url':const url=document.createElement('a');url.setAttribute('href',record['url']);url.textContent=f.getAttribute('text')||record['url'];return url;case'code':const code=document.createElement('input');code.setAttribute('name','code');code.setAttribute('class','form-control col-10 col-md-6');code.setAttribute('placeholder','6-digit code');code.required=true;code.maxLength=6;code.minLength=6;return code;case'secret':const secretSpan=document.createElement('span');secretSpan.setAttribute('name','secret');secretSpan.setAttribute('class','o_field_copy_url');secretSpan.textContent=record['secret'];const copySpanIcon=document.createElement('span');copySpanIcon.setAttribute('class','fa fa-clipboard');const copySpanText=document.createElement('span');copySpanText.textContent=_t(' Copy');const copyButton=document.createElement('button');copyButton.setAttribute('class','btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2');copyButton.onclick=async function(event){event.preventDefault();$(copyButton).tooltip({title:_t("Copied!"),trigger:"manual",placement:"bottom"});await browser.navigator.clipboard.writeText($(secretSpan)[0].innerText);$(copyButton).tooltip('show');setTimeout(()=>$(copyButton).tooltip("hide"),800);};copyButton.appendChild(copySpanIcon);copyButton.appendChild(copySpanText);const secretDiv=document.createElement('div');secretDiv.setAttribute('class','o_field_copy d-flex justify-content-center align-items-center');secretDiv.appendChild(secretSpan);secretDiv.appendChild(copyButton);return secretDiv;default:return document.createTextNode(record[f.getAttribute('name')]||'');}}
 function fixupViewBody(oldNode,record){let qrcode=null,code=null,node=null;switch(oldNode.nodeType){case 1:if(oldNode.tagName==='field'){node=fromField(oldNode,record);switch(oldNode.getAttribute('name')){case'qrcode':qrcode=node;break;case'code':code=node;break}
@@ -9418,6 +9507,102 @@ return this._super.apply(this,arguments);},});return __exports;});
                     </div>
                 </form>
             </t>
+        </div>
+    </t>
+
+<t t-name="payment.deleteTokenDialog">
+        <div>
+            <p>Are you sure you want to delete this payment method?</p>
+            <t t-if="linkedRecordsInfo.length &gt; 0">
+                <p>It is currently linked to the following documents:</p>
+                <ul>
+                    <li t-foreach="linkedRecordsInfo" t-as="documentInfo" t-key="documentInfoIndex">
+                        <a t-att-title="documentInfo.description" t-att-href="documentInfo.url" t-esc="documentInfo.name"/>
+                    </li>
+                </ul>
+            </t>
+        </div>
+    </t>
+
+<t t-name="payment.transactionDetails">
+        <div>  
+            <t t-set="alert_style" t-value="'info'"/>
+            <t t-set="alert_header" t-value="'Please wait...'"/>
+            <t t-if="state == 'draft'">
+                <t t-set="alert_message" t-value="display_message ? display_message                    : 'Your payment has not been processed yet.'"/>
+            </t>
+            <t t-elif="state == 'pending'">
+                <t t-set="alert_style" t-value="'warning'"/>
+                <t t-set="alert_message" t-value="display_message"/>
+            </t>
+            <t t-elif="state == 'authorized'">
+                <t t-set="alert_style" t-value="'success'"/>
+                <t t-set="alert_message" t-value="display_message"/>
+            </t>
+            <t t-elif="state == 'done'">
+                <t t-set="alert_style" t-value="'success'"/>
+                <t t-set="alert_header" t-value="operation !== 'validation' ? 'Your payment has been processed' :                             'Your payment method has been saved'"/>
+            </t>
+            <t t-elif="state == 'cancel'">
+                <t t-set="alert_style" t-value="'danger'"/>
+                <t t-set="alert_header" t-value="'This payment has been canceled'"/>
+                <t t-set="alert_message" t-value="state_message ? 'Reason: ' + state_message : 'No payment has been processed.'"/>
+            </t>
+            <t t-elif="state == 'error'">
+                <t t-set="alert_style" t-value="'danger'"/>
+                <t t-set="alert_header" t-value="'Error'"/>
+                <t t-set="alert_message" t-value="state_message"/>
+            </t>
+
+            <div name="o_payment_status_alert" t-attf-class="alert alert-{{alert_style}} d-flex gap-3">
+                <div>
+                    <i t-attf-class="fa fa-{{alert_style === 'danger' ? 'exclamation-triangle'                                      : 'cog fa-spin'}}"/>
+                </div>
+                <div>
+                    <h5 class="alert-heading mb-0" t-out="alert_header"/>
+                    <t t-if="alert_message" t-out="alert_message"/>
+                </div>
+                <a t-att-href="landing_route" class="alert-link ms-auto text-nowrap">
+                    Skip <i class="oi oi-arrow-right ms-1 small"/>
+                </a>
+            </div>
+
+            <div class="o_cc o_cc2 row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
+                <div class="col py-3">
+                    <label for="o_payment_summary_amount" class="d-block small text-muted">
+                        Amount
+                    </label>
+                    <span id="o_payment_summary_amount" t-out="formatCurrency(amount, currency_id)" class="fs-5 fw-bold"/>
+                </div>
+                <hr class="d-md-none m-0 text-300 opacity-100"/>
+                <div class="o_payment_summary_separator col py-3 text-break">
+                    <label for="o_payment_summary_reference" class="d-block small text-muted">
+                        Reference
+                    </label>
+                    <span id="o_payment_summary_reference" t-out="reference" class="fs-5 fw-bold"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="payment.tx_not_found">
+        <div class="text-center">  
+            <p>We are not able to find your payment, but don't worry.</p>
+            <p>You should receive an email confirming your payment in a few minutes.</p>
+            <p>If the payment hasn't been confirmed you can contact us.</p>
+        </div>
+    </t>
+
+    <t t-name="payment.rpc_error">
+        <div class="text-center">  
+            <p>Unable to contact the server. Please wait. <i class="fa fa-refresh fa-spin"/></p>
+        </div>
+    </t>
+
+    <t t-name="payment.exception">
+        <div class="text-center">  
+            <h2>Internal server error</h2>
+            <pre><t t-out="error_message"/></pre>
         </div>
     </t>
 

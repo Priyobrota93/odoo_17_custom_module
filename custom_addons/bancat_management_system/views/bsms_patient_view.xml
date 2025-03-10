@@ -9,7 +9,13 @@
 <!--            <field name="domain">[('patient_id', '=', active_id)]</field>-->
 <!--        </record>-->
 
-
+        <record id="action_open_visit" model="ir.actions.act_window">
+            <field name="name">Patient Visits</field>
+            <field name="res_model">bancat.patient.visit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="bsms_patient_visit_tree_view"/>
+            <field name="domain">[('patient_id', '=', active_id)]</field>
+        </record>
 
 
         <record id="action_open_documents" model="ir.actions.act_window">
@@ -55,19 +61,15 @@
             <field name="name">bancat.patient.form</field>
             <field name="model">bancat.patient</field>
             <field name="arch" type="xml">
-<!--                <header>-->
-<!--                    <div name="button_box" position="inside">-->
-<!--                    <button-->
-<!--                        name="%(action_open_documents)d"-->
-<!--                        type="action"-->
-<!--                        string="Documents"-->
-<!--                        class="oe_stat_button"-->
-<!--                        icon="fa-file"-->
-<!--                        />-->
-<!--                    </div>-->
-<!--                    <field name="document_count"/>-->
-<!--                </header>-->
+
                 <form>
+
+                    <header>
+                        <button name="action_check_in" type="object" string="Check In" class="btn btn-primary"/>
+                        <button name="action_check_out" type="object" string="Check Out" class="btn btn-danger"/>
+                        <field  name="state" widget="statusbar"/>
+                        <!-- <field  name="state" widget="statusbar" statusbar_visible ="new,received"/>   {(if want to specific statusbar state show using statusbar_visible and specific state mention)}-->
+                    </header>
 
                     <sheet>
                         <div name="button_box" position="inside">
@@ -82,6 +84,16 @@
                                     </div>
                                 </div>
                             </button>
+                            <button class="oe_stat_button"
+                                    type="object"
+                                    name="action_open_visit"
+                                    icon="fa-file">
+                                <div class="oe_stat_info">
+                                    <span class="oe_stat_text">Visit</span>
+                                </div>
+                            </button>
+
+
                         </div>
 
 
@@ -255,6 +267,28 @@
                 </kanban>
             </field>
         </record>
+
+
+        <record id="bsms_patient_visit_tree_view" model="ir.ui.view">
+            <field name="name">bancat.patient.visit.tree</field>
+            <field name="model">bancat.patient.visit</field>
+            <field name="arch" type="xml">
+                <tree string="Patient Visits">
+                    <field name="patient_id"/>
+                    <field name="cancer_type"/>
+                    <field name="cancer_stage"/>
+                    <field name="current_hospital"/>
+                    <field name="treatment_details"/>
+                    <field name="approximate_amount"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="state" string="Stage"/>
+                </tree>
+            </field>
+        </record>
+
+
+
 
         <!-- Action -->
         <record id="action_bsms_patient" model="ir.actions.act_window">
