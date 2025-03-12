@@ -87,7 +87,7 @@
                             <button class="oe_stat_button"
                                     type="object"
                                     name="action_open_visit"
-                                    icon="fa-file">
+                                    icon="fa-bullseye">
                                 <div class="oe_stat_info">
                                     <span class="oe_stat_text">Visit</span>
                                 </div>
@@ -216,6 +216,7 @@
                     <field name="cancer_type"/>
                     <field name="cancer_stage"/>
                     <field name="emergency_contact"/>
+                    <field name="state"/>
 
                     <templates>
                          <t t-name="kanban-box">
@@ -259,6 +260,10 @@
                                     <div>
                                         <span>Contact: <field name="emergency_contact"/></span>
                                     </div>
+                                    <div>
+                                        <span>Status: <field name="state"/></span>
+                                    </div>
+
 
                                 </div>
                             </div>

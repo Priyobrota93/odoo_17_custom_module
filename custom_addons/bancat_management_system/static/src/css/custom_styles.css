@@ -1,3 +1,9 @@
+@media (min-width: 576px) {
+    .o_form_view .oe_title {
+        max-width: 100%;
+    }
+}
+
 .radio_as_buttons .o_radio_item {
     display: inline-block !important;
     margin-right: 16px;

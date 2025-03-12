@@ -51,6 +51,7 @@ class Patient(models.Model):
     ], string="Current Status", required=True, default='under_treatment',tracking=True)
 
     attendance_ids = fields.One2many('bancat.attendance', 'patient_id', string='Attendance Information', auto_join=True,tracking=True)
+    
     document_ids = fields.One2many('documents.document', 'patient_id', string="Documents", copy=True)
 
     state = fields.Selection([
@@ -61,7 +62,6 @@ class Patient(models.Model):
     start_date = fields.Datetime(string="Start Date", related='create_date', default=fields.Datetime.now, readonly=True)
     end_date = fields.Datetime(string="End Date")
 
-    # Link to visits (new model)
     visit_ids = fields.One2many('bancat.patient.visit', 'patient_id', string="Visits")
 
 
@@ -79,7 +79,7 @@ class Patient(models.Model):
                     key=lambda v: v.start_date or fields.Datetime.from_string('1900-01-01'), reverse=True)
                 patient.last_visit_state = sorted_visits[0].state
             else:
-                patient.last_visit_state = False  # or set a default value like 'check_in'
+                patient.last_visit_state = False
 
     @api.depends('dob')
     def _compute_age(self):
