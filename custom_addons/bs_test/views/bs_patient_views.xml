@@ -1,0 +1,74 @@
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="bs_patient_tree_view" model="ir.ui.view">
+            <field name="name">bs.patient.tree</field>
+            <field name="model">bs.patient</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="bs_patient_id"/>
+                    <field name="bs_name" placeholder="Enter full name"/>
+                    <field name="gender"/>
+                    <field name="dob"/>
+                    <field name="age"/>
+                    <field name="cancer_type"/>
+
+                </tree>
+            </field>
+        </record>
+        
+         <!-- Form View -->
+        <record id="bs_patient_form_view" model="ir.ui.view">
+            <field name="name">bs.patient.form</field>
+            <field name="model">bs.patient</field>
+            <field name="arch" type="xml">
+
+                <form>
+
+                    <sheet>
+                        
+
+
+                        <div class="oe_title d-flex justify-between align-items-center">
+                            <h1 class="m-0">
+                                <field name="bs_name" placeholder="Enter Patient name" class="oe_inline"/>
+                            </h1>
+                             <div class="me-3">
+                                <field name="profile_image" widget="image" class="oe_avatar" options="{'size': [128, 128]}"/>
+                            </div>
+                            
+                        </div>
+                        <group>
+                            <group>
+<!--                                <field name="patient_id"/>-->
+                                <field name="dob"/>
+                                <field name="age" readonly="1"/>
+
+                            </group>
+                            <group>
+                                <field name="gender"/>
+                                <field name="cancer_type"/>
+                            </group>
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_bs_patient" model="ir.actions.act_window">
+            <field name="name">Patient</field>
+            <field name="res_model">bs.patient</field>
+            <field name="view_mode">list,form,kanban</field>
+            <field name="help" type="html">
+                <p class='o_view_nocontent_smiling_face'>
+                    Create a patient contact
+                </p>
+            </field>
+        </record>
+
+    </data>
+
+</odoo>

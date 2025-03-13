@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+bs_test.access_bs_patient,access_bs_patient,bs_test.model_bs_patient,base.group_user,1,1,1,1
+bs_test.access_bs_cancer_type,access_bs_cancer_type,bs_test.model_bs_cancer_type,base.group_user,1,1,1,1

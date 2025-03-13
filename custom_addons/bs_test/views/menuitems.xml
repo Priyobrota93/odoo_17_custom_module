@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+<odoo>
+    <menuitem name="BS" id="menu_root_bs_test">
+        <menuitem id="menu_bs_contact" name="BS Contacts" >
+            <menuitem id="menu_bs_donor" name="BS Donor" action="action_bs_patient"/>
+            <menuitem id="menu_bs_patient" name="BS Patient" action="action_bs_patient"/>
+        </menuitem>
+        <menuitem id="menu_bs_config" name="Configuration">
+            <menuitem id="menu_cancer_type" name="Cancer Types" action="action_cancer_type"/>
+        </menuitem>
+
+    </menuitem>
+</odoo>

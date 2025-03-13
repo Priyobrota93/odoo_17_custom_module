@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id = "cancer_type_tree_view" model="ir.ui.view">
+            <field name="name">bs.cancer.type.tree</field>
+            <field name ="model">bs.cancer.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="bs_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id = "cancer_type_form_view" model="ir.ui.view">
+            <field name="name">bs.cancer.type.form</field>
+            <field name ="model">bs.cancer.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="bs_name"/>
+                        </group>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="action_cancer_type" model="ir.actions.act_window">
+            <field name="name">Cancer Type</field>
+            <field name="res_model">bs.cancer.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref ="cancer_type_tree_view"/>
+        </record>
+    </data>
+
+</odoo>

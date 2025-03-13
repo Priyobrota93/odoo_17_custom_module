@@ -150,7 +150,7 @@
 <!--                                </div>-->
 
                                 <h1>Current Attendance Records</h1>
-                                <field name="attendance_ids" nolabel="1" context="{'default_patient_id': active_id}">
+                                <field name="attendance_ids" nolabel="1" domain="[('is_latest', '=', False)]" context="{'default_patient_id': active_id}">
                                     <tree decoration-info="atten2_name" create="'Add an attendance'">
                                         <field name="create_date" string="Recorded Date"/>
                                         <field name="atten_name"/>

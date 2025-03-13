@@ -35,8 +35,11 @@ class Attendance(models.Model):
     atten2_education_level = fields.Char(string='Education Level')
     atten2_reference = fields.Char(string='Reference')
 
+    is_latest = fields.Boolean(string="Latest Attendance", default=True)
+
     @api.model
     def create(self, vals):
+        patient_id = vals.get('patient_id')
         # Validation for primary attendance
         if not vals.get('atten_age') or vals['atten_age'] <= 0:
             raise ValidationError("The 'Age' field is mandatory and must be greater than 0.")
@@ -44,6 +47,9 @@ class Attendance(models.Model):
         # Validation for additional attendance
         if 'atten2_age' in vals and (not vals['atten2_age'] or vals['atten2_age'] <= 0):
             raise ValidationError("The 'Additional Age' field is mandatory and must be greater than 0.")
+
+        if patient_id:
+            self.env['bancat.attendance'].search([('patient_id', '=', patient_id)]).write({'is_latest': False})
 
         return super(Attendance, self).create(vals)
 

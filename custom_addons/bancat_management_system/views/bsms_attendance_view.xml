@@ -66,6 +66,8 @@
             </field>
         </record>
 
+
+
         <!-- Actions -->
         <record id="action_bancat_attendance" model="ir.actions.act_window">
             <field name="name">Attendance</field>

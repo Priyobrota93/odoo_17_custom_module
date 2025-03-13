@@ -51,7 +51,7 @@ class Patient(models.Model):
     ], string="Current Status", required=True, default='under_treatment',tracking=True)
 
     attendance_ids = fields.One2many('bancat.attendance', 'patient_id', string='Attendance Information', auto_join=True,tracking=True)
-    
+
     document_ids = fields.One2many('documents.document', 'patient_id', string="Documents", copy=True)
 
     state = fields.Selection([
