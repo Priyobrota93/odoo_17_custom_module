@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo >
+    <data>
+        <record id="email_template_mobile_access" model="mail.template">
+            <field name="name">Mobile Access Granted</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="subject">Mobile Access Enabled [HR Notification]</field>
+            <field name="email_from">{{ object.user_id.work_email }}</field>
+            <field name="email_to">{{ object.work_email or '' }}</field>
+            <field name="partner_to">{{ object.user_id.partner_id.id or '' }}</field>
+            <field name="body_html" type="html">
+                <p>Dear {{ object.name }},</p>
+                <p>We are pleased to inform you that mobile access has been enabled for you. You can now log in and access the system via mobile devices.</p>
+                <p>If you have any questions or need assistance, please contact the HR department.</p>
+                <p>Best regards,<br/>
+                The HR Team</p>
+            </field>
+        </record>
+    </data>
+</odoo>
+
