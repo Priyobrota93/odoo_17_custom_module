@@ -22,6 +22,11 @@
         # "data/scheduled_actions.xml",
 
     ],
+    "assets": {
+            "web.assets_backend": [
+                "/access_mobile_hrx/static/src/css/custom_styles.css"
+            ],
+        },
     "installable": True,
     "auto_install": False,
     "application": True,
