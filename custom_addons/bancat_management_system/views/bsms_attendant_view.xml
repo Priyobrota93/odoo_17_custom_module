@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form Views -->
+        <record id="view_bancat_attendance_form" model="ir.ui.view">
+            <field name="name">bancat.attendance.form</field>
+            <field name="model">bancat.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Attendant" id="attendance_form_1">
+                    <sheet>
+<!--                        <div class="oe_button_box" name="button_box">-->
+<!--                            <button name="open_second_form"-->
+<!--                                    string="Add Another Attendance"-->
+<!--                                    type="object"-->
+<!--                                    class="oe_highlight"/>-->
+<!--                        </div>-->
+                        <button name="open_second_form"
+                                    string="Add Another Attendant"
+                                    type="object"
+                                    class="oe_highlight"/>
+<!--                        <button name="%(bancat_management_system.action_bancat_attendance_2)d" string="Add" type="action" class="oe_highlight"/>-->
+                        <group>
+
+                            <group>
+                                <field name="atten_name"/>
+                                <field name="atten_age" required="1"/>
+                                <field name="atten_gender"/>
+                                <field name="atten_relation_of_patient"/>
+                                <field name="atten_profession"/>
+                            </group>
+                            <group>
+                                <field name="atten_address"/>
+                                <field name="atten_contact_number"/>
+                                <field name="atten_education_level"/>
+                                <field name="atten_reference"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_bancat_attendance_form_2" model="ir.ui.view">
+            <field name="name">bancat.attendance.form2</field>
+            <field name="model">bancat.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Additional Attendant" id="attendance_form_2">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="atten2_name"/>
+                                <field name="atten2_age"/>
+                                <field name="atten2_gender"/>
+                                <field name="atten2_relation_of_patient"/>
+                                <field name="atten2_profession"/>
+                            </group>
+                            <group>
+                                <field name="atten2_address"/>
+                                <field name="atten2_contact_number"/>
+                                <field name="atten2_education_level"/>
+                                <field name="atten2_reference"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+        <!-- Actions -->
+        <record id="action_bancat_attendance" model="ir.actions.act_window">
+            <field name="name">Attendant</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bancat.attendance</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bancat_attendance_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_bancat_attendance_2" model="ir.actions.act_window">
+            <field name="name">Additional Attendant</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bancat.attendance</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bancat_attendance_form_2"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

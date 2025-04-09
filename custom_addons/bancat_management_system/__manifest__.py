@@ -16,13 +16,13 @@
         "views/cancer_type_view.xml",
         "views/bed_allocation_view.xml",
         "views/cancer_hospital_view.xml",
-        "views/bsms_attendance_view.xml",
+        "views/bsms_attendant_view.xml",
         "views/contributor_type_view.xml",
         "views/menuitems.xml",
         "data/patient_cancer_type.xml",
         "data/bed_allocation.xml",
         "data/cancer_hospital.xml",
-        "data/contributor_type.xml"
+        "data/contributor_type.xml",
 
     ],
     "assets": {

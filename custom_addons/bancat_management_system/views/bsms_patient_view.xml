@@ -21,7 +21,7 @@
         <record id="action_open_documents" model="ir.actions.act_window">
             <field name="name">Patient Documents</field>
             <field name="res_model">documents.document</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
             <field name="domain">[('patient_id', '=', active_id)]</field>
             <field name="context">{'default_patient_id': active_id}</field>
         </record>
@@ -74,14 +74,15 @@
                     <sheet>
                         <div name="button_box" position="inside">
                             <button class="oe_stat_button"
-                                    type="action"
-                                    name="%(action_open_documents)d"
-                                    icon="fa-file">
-                                <div class="oe_stat_info">
+                                    type="object"
+                                    name="action_open_documents"
+                                    icon="fa-file-text-o">
+                                <div class="o_stat_info">
+                                    <field name="latest_folder_document_count" class="o_stat_value"/>
                                     <span class="oe_stat_text">Documents</span>
-                                    <div>
-                                        <field name="document_count"/>
-                                    </div>
+<!--                                    <div>-->
+<!--                                        <field name="latest_folder_document_count" class="o_stat_value"/>-->
+<!--                                    </div>-->
                                 </div>
                             </button>
                             <button class="oe_stat_button"
@@ -141,7 +142,7 @@
 <!--                            <page string="Attendance Information">-->
 <!--                                <button name="%(bancat_management_system.action_bancat_attendance)d" string="Add" type="action" class="oe_highlight"/>-->
 <!--                            </page>-->
-                            <page string="Attendance Information">
+                            <page string="Attendant Information">
 <!--                                <div class="oe_button_box" name="button_box">-->
 <!--                                    <button name="%(bancat_management_system.action_bancat_attendance)d"-->
 <!--                                            string="Add Attendance"-->
@@ -149,9 +150,9 @@
 <!--                                            class="oe_highlight"/>-->
 <!--                                </div>-->
 
-                                <h1>Current Attendance Records</h1>
+                                <h1>Current Attendant Records</h1>
                                 <field name="attendance_ids" nolabel="1" domain="[('is_latest', '=', False)]" context="{'default_patient_id': active_id}">
-                                    <tree decoration-info="atten2_name" create="'Add an attendance'">
+                                    <tree >
                                         <field name="create_date" string="Recorded Date"/>
                                         <field name="atten_name"/>
                                         <field name="atten_age"/>
@@ -170,26 +171,38 @@
 
 
                             </page>
-                            <page string="Documents">
-                                <field name="document_ids" nolabel="1">
-                                    <tree editable="bottom" create="'Add a file'" delete="true">
-                                        <field name="name"/>
-                                        <field name="attachment_id" widget="binary"/>
-<!--                                        <field name="file_description"/>-->
-                                    </tree>
-                                    <kanban>
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div class="oe_kanban_global_click">
-                                                    <strong><field name="name"/></strong>
-                                                    <field name="attachment_id" widget="binary"/>
-                                                </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
-                            </page>
+
+                            <!-- Add this to your patient form view for documents page -->
+<!--                            <page string="Documents">-->
+<!--                                <field name="document_ids" nolabel="1">-->
+<!--                                    <tree editable="bottom">-->
+<!--                                        <field name="name"/>-->
+<!--                                        <field name="attachment_id" widget="many2one_binary" string="File" options="{'no_create': True}"/>-->
+<!--                                        <field name="folder_id" invisible="0"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+<!--                            </page>-->
+
+<!--                            <page string="Documents">-->
+<!--                                <field name="document_ids" nolabel="1">-->
+<!--                                    <tree editable="bottom" create="'Add a file'" delete="true">-->
+<!--                                        <field name="name"/>-->
+<!--                                        <field name="attachment_id" widget="binary"/>-->
+<!--&lt;!&ndash;                                        <field name="file_description"/>&ndash;&gt;-->
+<!--                                    </tree>-->
+<!--                                    <kanban>-->
+<!--                                        <field name="name"/>-->
+<!--                                        <templates>-->
+<!--                                            <t t-name="kanban-box">-->
+<!--                                                <div class="oe_kanban_global_click">-->
+<!--                                                    <strong><field name="name"/></strong>-->
+<!--                                                    <field name="attachment_id" widget="binary"/>-->
+<!--                                                </div>-->
+<!--                                            </t>-->
+<!--                                        </templates>-->
+<!--                                    </kanban>-->
+<!--                                </field>-->
+<!--                            </page>-->
 
 
                         </notebook>
@@ -272,6 +285,47 @@
                 </kanban>
             </field>
         </record>
+
+<!--        &lt;!&ndash; Add this to your bsms_patient_form_view to show documents from the current visit &ndash;&gt;-->
+<!--        <record id="bsms_patient_visit_form_view" model="ir.ui.view">-->
+<!--            <field name="name">bancat.patient.visit.form</field>-->
+<!--            <field name="model">bancat.patient.visit</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form>-->
+<!--                    <sheet>-->
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                <field name="patient_id"/>-->
+<!--                                <field name="state"/>-->
+<!--                                <field name="approximate_amount"/>-->
+<!--                                <field name="start_date"/>-->
+<!--                                <field name="end_date"/>-->
+<!--                            </group>-->
+<!--                            <group>-->
+<!--                                <field name="cancer_type"/>-->
+<!--                                <field name="cancer_stage"/>-->
+<!--                                <field name="current_hospital"/>-->
+<!--                                <field name="folder_id" invisible="1"/>-->
+<!--                            </group>-->
+<!--                        </group>-->
+<!--                        <notebook>-->
+<!--                            <page string="Treatment Details">-->
+<!--                                <field name="treatment_details" nolabel="1"/>-->
+<!--                            </page>-->
+<!--                            <page string="Documents">-->
+<!--                                <field name="document_ids" nolabel="1">-->
+<!--                                    <tree editable="bottom">-->
+<!--                                        <field name="name"/>-->
+<!--                                        <field name="attachment_id" widget="many2one_binary" string="File" options="{'no_create': True}"/>-->
+<!--                                        <field name="folder_id" invisible="0"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+<!--                            </page>-->
+<!--                        </notebook>-->
+<!--                    </sheet>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
 
 
         <record id="bsms_patient_visit_tree_view" model="ir.ui.view">
