@@ -1,6 +1,7 @@
 from odoo import fields, models, api,SUPERUSER_ID
 from datetime import date
 import re
+from odoo.exceptions import UserError
 
 
 class Patient(models.Model):
@@ -23,15 +24,15 @@ class Patient(models.Model):
         ('other', 'Other')
     ], string="Gender", required=True,tracking=True)
     dob = fields.Date(string="Date of Birth",required=True,tracking=True)
-    age = fields.Integer(string="Age", compute="_compute_age", store=True,tracking=True)
-    cancer_type = fields.Many2one("bancat.cancer.type", string="Cancer Type", required=True,tracking=True)  # ("model",string)
+    age = fields.Integer(string="Age", compute="_compute_age", store=True, tracking=True)
+    cancer_type = fields.Many2one("bancat.cancer.type", string="Cancer Type", tracking=True)  # ("model",string)
     cancer_stage = fields.Selection([
         ('', 'Select Cancer Stage'),
         ('stage_1', 'Stage I'),
         ('stage_2', 'Stage II'),
         ('stage_3', 'Stage III'),
         ('stage_4', 'Stage IV'),
-    ], string="Cancer Stage", required=True,tracking=True)
+    ], string="Cancer Stage", tracking=True)
 
     bed_allocation_id = fields.Many2one('bed.allocation', string="Bed Allocation", domain="[('is_available', '=', True)]", tracking=True)
     patient_address = fields.Char(string="Address",tracking=True)
@@ -39,9 +40,9 @@ class Patient(models.Model):
     emergency_contact=fields.Char(string="Emergency Contact",tracking=True)
 
     current_hospital = fields.Many2one('bancat.hospital', string="Current Hospital",tracking=True)
-    hospital_address = fields.Text(string="Hospital Address", related="current_hospital.address", store=True,tracking=True)
+    hospital_address = fields.Text(string="Hospital Address", related="current_hospital.address", store=True, tracking=True)
 
-    treatment_details = fields.Text(string="Treatment Details",tracking=True)
+    treatment_details = fields.Text(string="Treatment Details", tracking=True)
     current_status = fields.Selection([
         ('', 'Select Status'),
         ('under_treatment', 'Under Treatment'),
@@ -49,9 +50,9 @@ class Patient(models.Model):
         ('critical', 'Critical'),
         ('discharged', 'Discharged'),
         ('deceased', 'Deceased'),
-    ], string="Current Status", required=True, default='under_treatment',tracking=True)
+    ], string="Current Status", default='under_treatment', tracking=True)
 
-    attendance_ids = fields.One2many('bancat.attendance', 'patient_id', string='Attendant Information', auto_join=True,tracking=True)
+    attendance_ids = fields.One2many('bancat.attendance', 'patient_id', string='Attendant Information', auto_join=True, tracking=True)
 
     document_ids = fields.One2many('documents.document', 'patient_id', string="Documents", copy=True)
 
@@ -59,7 +60,7 @@ class Patient(models.Model):
         ('check_in', 'Check In'),
         ('check_out', 'Check Out')
     ], string="State", default='check_in', tracking=True)
-    approximate_amount = fields.Float(string="Approximate Amount")
+    approximate_amount = fields.Float(string="Approximate Amount", required=True, tracking=True)
     start_date = fields.Datetime(string="Start Date", related='create_date', default=fields.Datetime.now, readonly=True)
     end_date = fields.Datetime(string="End Date")
 
@@ -68,14 +69,43 @@ class Patient(models.Model):
     latest_folder_id = fields.Many2one('documents.folder', string="Latest Document Folder",
                                        compute="_compute_latest_folder_id", store=True)
     document_count = fields.Integer(compute="_compute_document_count", string="Document Count")
-    latest_folder_document_count = fields.Integer(compute="_compute_latest_folder_document_count",
-                                                  string="Latest Folder Documents")
+    # document_count = fields.Integer(compute="_compute_document_count",
+    #                                               string="Latest Folder Documents")
 
 
     last_visit_state = fields.Selection([
         ('check_in', 'Check In'),
         ('check_out', 'Check Out'),
-    ], string="Visit State", compute="_compute_last_visit_state", store=True)
+    ], string="Visit State", compute="_compute_last_visit_state", store=True, tracking=True)
+
+    # Store previous data for check-in/check-out
+    previous_cancer_type_id = fields.Many2one("bancat.cancer.type", string="Previous Cancer Type", tracking=False)
+    previous_cancer_stage = fields.Selection([
+        ('', 'Select Cancer Stage'),
+        ('stage_1', 'Stage I'),
+        ('stage_2', 'Stage II'),
+        ('stage_3', 'Stage III'),
+        ('stage_4', 'Stage IV'),
+    ], string="Previous Cancer Stage", tracking=False)
+    previous_current_hospital_id = fields.Many2one('bancat.hospital', string="Previous Hospital", tracking=False)
+    previous_current_status = fields.Selection([
+        ('', 'Select Status'),
+        ('under_treatment', 'Under Treatment'),
+        ('recovered', 'Recovered'),
+        ('critical', 'Critical'),
+        ('discharged', 'Discharged'),
+        ('deceased', 'Deceased'),
+    ], string="Previous Status", tracking=False)
+    previous_treatment_details = fields.Text(string="Previous Treatment Details", tracking=False)
+    previous_bed_allocation_id = fields.Many2one('bed.allocation', string="Previous Bed Allocation", tracking=False)
+
+    # Flag to track if we need to hide some fields from the UI
+    # is_active_visit = fields.Boolean(string="Is Active Visit", compute="_compute_is_active_visit", store=True)
+
+    # @api.depends('state')
+    # def _compute_is_active_visit(self):
+    #     for patient in self:
+    #         patient.is_active_visit = patient.state == 'check_in'
 
     @api.depends('visit_ids.state', 'visit_ids.start_date')
     def _compute_last_visit_state(self):
@@ -123,6 +153,12 @@ class Patient(models.Model):
             'patient_id': patient.id,
             'state': 'check_in',
             'start_date': fields.Datetime.now(),
+            # 'cancer_type': patient.cancer_type.id if patient.cancer_type else False,
+            # 'cancer_stage': patient.cancer_stage,
+            # 'current_hospital': patient.current_hospital.id if patient.current_hospital else False,
+            # 'treatment_details': patient.treatment_details,
+            # 'current_status': patient.current_status,
+            # 'approximate_amount': patient.approximate_amount,
 
         })
 
@@ -156,21 +192,21 @@ class Patient(models.Model):
             else:
                 patient.latest_folder_id = False
 
-    @api.depends('document_ids')
-    def _compute_document_count(self):
-        for patient in self:
-            patient.document_count = len(patient.document_ids)
+    # @api.depends('document_ids')
+    # def _compute_document_count(self):
+    #     for patient in self:
+    #         patient.document_count = len(patient.document_ids)
 
     @api.depends('latest_folder_id')
-    def _compute_latest_folder_document_count(self):
+    def _compute_document_count(self):
         for patient in self:
             if patient.latest_folder_id:
                 count = self.env['documents.document'].search_count([
                     ('folder_id', '=', patient.latest_folder_id.id)
                 ])
-                patient.latest_folder_document_count = count
+                patient.document_count = count
             else:
-                patient.latest_folder_document_count = 0
+                patient.document_count = 0
 
     def action_open_documents(self):
         self.ensure_one()
@@ -247,6 +283,11 @@ class Patient(models.Model):
             'approximate_amount': self.approximate_amount,
             'folder_id': visit_folder.id,
             'start_date': now,
+            'cancer_type': self.cancer_type.id if self.cancer_type else False,
+            'cancer_stage': self.cancer_stage,
+            'current_hospital': self.current_hospital.id if self.current_hospital else False,
+            'treatment_details': self.treatment_details,
+            'current_status': self.current_status,
         })
 
         # Update the patient record
@@ -255,6 +296,32 @@ class Patient(models.Model):
             'start_date': now,
             'end_date': False,
         })
+
+        # If bed is allocated, mark it as unavailable
+        # if self.bed_allocation_id:
+        #     self.bed_allocation_id.is_available = False
+
+        # If there are previous values stored, restore them
+        if self.previous_cancer_type_id or self.previous_cancer_stage or self.previous_current_hospital_id or self.previous_treatment_details or self.previous_current_status:
+            self.write({
+                'cancer_type': self.previous_cancer_type_id.id if self.previous_cancer_type_id else False,
+                'cancer_stage': self.previous_cancer_stage,
+                'current_hospital': self.previous_current_hospital_id.id if self.previous_current_hospital_id else False,
+                'treatment_details': self.previous_treatment_details,
+                'current_status': self.previous_current_status,
+                # Clear previous values after restoring
+                'previous_cancer_type_id': False,
+                'previous_cancer_stage': False,
+                'previous_current_hospital_id': False,
+                'previous_treatment_details': False,
+                'previous_current_status': False,
+            })
+
+        # If there's a previous bed allocation, try to allocate it if available
+        if self.previous_bed_allocation_id and self.previous_bed_allocation_id.is_available:
+            self.bed_allocation_id = self.previous_bed_allocation_id.id
+            self.previous_bed_allocation_id.is_available = False
+            self.previous_bed_allocation_id = False
 
         # Refresh the latest folder
         self._compute_latest_folder_id()
@@ -266,17 +333,95 @@ class Patient(models.Model):
 
         self.ensure_one()
         now = fields.Datetime.now()
+
+        # Store the current bed allocation before clearing
+        # old_bed = self.bed_allocation_id
+
+        # Clear fields and mark bed as available
+        # values = {
+        #     'state': 'check_out',
+        #     'end_date': now,
+        #     # Clear the specified fields
+        #     'cancer_type': False,
+        #     'cancer_stage': False,
+        #     'current_hospital': False,
+        #     'treatment_details': False,
+        #     'current_status': False,
+        #     'bed_allocation_id': False,
+        #     'approximate_amount': 0.0,
+        # }
+
+        # current_visit = self.visit_ids.filtered(lambda v: v.state == 'check_in')
+        # if current_visit:
+        #     current_visit[-1].write({
+        #         'state': 'check_out',
+        #         'end_date': now,
+        #         'cancer_type': self.cancer_type.id if self.cancer_type else False,
+        #         'cancer_stage': self.cancer_stage,
+        #         'current_hospital': self.current_hospital.id if self.current_hospital else False,
+        #         'treatment_details': self.treatment_details,
+        #         'current_status': self.current_status,
+        #         'approximate_amount': self.approximate_amount,
+        #     })
+        #
+        # # Make the bed available again if there was one allocated
+        # if old_bed:
+        #     old_bed.is_available = True
+        #
+        # # Archive existing attendants (we keep the history but they won't show in the form)
+        # if self.attendance_ids:
+        #     for attendant in self.attendance_ids:
+        #         attendant.is_latest = False
+
+
+
         self.write({
             'state': 'check_out',
             'end_date': now,
+
+            'previous_cancer_type_id': self.cancer_type.id if self.cancer_type else False,
+            'previous_cancer_stage': self.cancer_stage,
+            'previous_current_hospital_id': self.current_hospital.id if self.current_hospital else False,
+            'previous_treatment_details': self.treatment_details,
+            'previous_current_status': self.current_status,
+            'previous_bed_allocation_id': self.bed_allocation_id.id if self.bed_allocation_id else False,
         })
 
-        open_visits = self.visit_ids.filtered(lambda v: v.state == 'check_in')
-        if open_visits:
-            open_visits[-1].write({
-                'state': 'check_out',
-                'end_date': now,
-            })
+
+        # open_visits = self.visit_ids.filtered(lambda v: v.state == 'check_in')
+        # if open_visits:
+        #     open_visits[-1].write({
+        #         'state': 'check_out',
+        #         'end_date': now,
+        #     })
+
+        # Create a final record in patient_visit with all data before clearing
+        if self.visit_ids and any(v.state == 'check_in' for v in self.visit_ids):
+            open_visits = self.visit_ids.filtered(lambda v: v.state == 'check_in')
+            if open_visits:
+                open_visits[-1].write({
+                    'state': 'check_out',
+                    'end_date': now,
+                    'cancer_type': self.cancer_type.id if self.cancer_type else False,
+                    'cancer_stage': self.cancer_stage,
+                    'current_hospital': self.current_hospital.id if self.current_hospital else False,
+                    'treatment_details': self.treatment_details,
+                    'current_status': self.current_status,
+                })
+
+        # Free up the bed
+        if self.bed_allocation_id:
+            self.bed_allocation_id.is_available = True
+
+        # Clear the fields in UI (but keep the data in database through previous_* fields)
+        self.write({
+            'cancer_type': False,
+            'cancer_stage': False,
+            'current_hospital': False,
+            'treatment_details': False,
+            'current_status': False,
+            'bed_allocation_id': False,
+        })
         return True
 
     def action_open_visit(self):
@@ -291,6 +436,21 @@ class Patient(models.Model):
             'domain': [('patient_id', '=', self.id)],
         }
 
+    def action_view_release_paper(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'bancat_management_system.release_paper_template',
+            'report_type': 'qweb-html',
+            'report_file': 'bancat_management_system.release_paper_template',
+            'name': 'Release Paper',
+            'context': {'lang': self.env.context.get('lang')},
+        }
+
+    # def print_release_paper(self):
+    #     if not self:
+    #         raise UserError("No record selected.")
+    #     return self.env.ref('bancat_management_system.action_release_paper_report').report_action(self)
 
     # @api.depends('document_ids')
     # def _compute_document_count(self):

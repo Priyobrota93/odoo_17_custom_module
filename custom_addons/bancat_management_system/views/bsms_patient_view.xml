@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-<!--        <record id="action_bancat_patient_file" model="ir.actions.act_window">-->
-<!--            <field name="name">Patient Documents</field>-->
-<!--            <field name="res_model">bancat.patient.file</field>-->
-<!--            <field name="view_mode">tree,form</field>-->
-<!--            <field name="domain">[('patient_id', '=', active_id)]</field>-->
-<!--        </record>-->
-
         <record id="action_open_visit" model="ir.actions.act_window">
             <field name="name">Patient Visits</field>
             <field name="res_model">bancat.patient.visit</field>
@@ -42,6 +34,7 @@
                     <field name="bed_allocation_id"/>
                     <field name="current_hospital"/>
                     <field name="hospital_address"/>
+                     <field name="state"/>
 <!--                    <field name="attendance_ids" widget="one2many_list">-->
 <!--                        <field name="atten_name" string="Attendance Name"/>-->
 <!--                        <field name="atten_address" string="Attendance Address"/>-->
@@ -78,11 +71,8 @@
                                     name="action_open_documents"
                                     icon="fa-file-text-o">
                                 <div class="o_stat_info">
-                                    <field name="latest_folder_document_count" class="o_stat_value"/>
+                                    <field name="document_count" class="o_stat_value"/>
                                     <span class="oe_stat_text">Documents</span>
-<!--                                    <div>-->
-<!--                                        <field name="latest_folder_document_count" class="o_stat_value"/>-->
-<!--                                    </div>-->
                                 </div>
                             </button>
                             <button class="oe_stat_button"
@@ -91,6 +81,17 @@
                                     icon="fa-bullseye">
                                 <div class="oe_stat_info">
                                     <span class="oe_stat_text">Visit</span>
+                                </div>
+                            </button>
+
+                            <button class="oe_stat_button"
+                                    type="object"
+                                    name="action_view_release_paper"
+                                    icon="fa-print"
+                                    string="Release Paper"
+                                    invisible="state != 'check_out'">
+                                <div class="o_stat_info">
+                                    <span class="oe_stat_text">Release Paper</span>
                                 </div>
                             </button>
 
@@ -108,41 +109,59 @@
                         </div>
                         <group>
                             <group>
-<!--                                <field name="patient_id"/>-->
                                 <field name="dob"/>
                                 <field name="age" readonly="1"/>
-                                <field name="cancer_type"/>
-                                <field name="cancer_stage" />
+                                <field name="cancer_type" readonly= "('state' == 'check_out')"/>
+                                <field name="cancer_stage" readonly= "('state' == 'check_out')"/>
                             </group>
                             <group>
                                 <field name="gender"/>
-                                <field name="bed_allocation_id"/>
+                                <field name="bed_allocation_id" domain="[('is_available', '=', True)]" readonly= "('state' == 'check_out')"/>
                                 <field name="patient_address"/>
                                 <field name="emergency_contact"/>
                             </group>
                         </group>
                         <notebook>
 
-                            <page string ="Current Situation">
+                            <page string ="Current Situation" readonly= "('state' == 'check_out')">
                                  <sheet>
                                     <form>
                                         <group>
                                             <group>
-                                                <field name="current_hospital"/>
+                                                <field name="current_hospital" readonly= "('state' == 'check_out')"/>
                                                 <field name="hospital_address" readonly="1"/>
+                                                <field name="approximate_amount" readonly= "('state' == 'check_out')"/>
+
                                             </group>
                                             <group>
-                                                <field name="treatment_details" widget="text"/>
-                                                <field name="current_status"/>
+                                                <field name="treatment_details" widget="text" readonly= "('state' == 'check_out')"/>
+                                                <field name="current_status" readonly= "('state' == 'check_out')"/>
                                             </group>
                                         </group>
                                     </form>
                                  </sheet>
                             </page>
-<!--                            <page string="Attendance Information">-->
-<!--                                <button name="%(bancat_management_system.action_bancat_attendance)d" string="Add" type="action" class="oe_highlight"/>-->
-<!--                            </page>-->
-                            <page string="Attendant Information">
+
+                             <page string="Current Situation (Checked Out)" invisible= "('state' != 'check_out')">
+                                <div class="alert alert-info" role="alert">
+                                    <p>This patient is currently checked out. Previous medical information is archived and will be restored upon check-in.</p>
+                                    <p>Use the "Check In" button to admit this patient again.</p>
+                                </div>
+                                <group>
+                                    <group>
+                                        <field name="previous_cancer_type_id" readonly="1" string="Previous Cancer Type"/>
+                                        <field name="previous_cancer_stage" readonly="1" string="Previous Cancer Stage"/>
+                                        <field name="previous_current_hospital_id" readonly="1" string="Previous Hospital"/>
+                                    </group>
+                                    <group>
+                                        <field name="previous_current_status" readonly="1" string="Previous Status"/>
+                                        <field name="previous_bed_allocation_id" readonly="1" string="Previous Bed Allocation"/>
+                                    </group>
+                                </group>
+                                <field name="previous_treatment_details" readonly="1" string="Previous Treatment Details"/>
+                            </page>
+
+                            <page string="Attendant Information" readonly= "('state' == 'check_out')">
 <!--                                <div class="oe_button_box" name="button_box">-->
 <!--                                    <button name="%(bancat_management_system.action_bancat_attendance)d"-->
 <!--                                            string="Add Attendance"-->
@@ -151,7 +170,7 @@
 <!--                                </div>-->
 
                                 <h1>Current Attendant Records</h1>
-                                <field name="attendance_ids" nolabel="1" domain="[('is_latest', '=', False)]" context="{'default_patient_id': active_id}">
+                                <field name="attendance_ids" nolabel="1" domain="[('is_latest', '=', True)]" context="{'default_patient_id': active_id}"                  >
                                     <tree >
                                         <field name="create_date" string="Recorded Date"/>
                                         <field name="atten_name"/>
@@ -171,6 +190,25 @@
 
 
                             </page>
+
+<!--                            <page string="Attendant History" invisible= "('state' != 'check_out')">-->
+<!--                                <div class="alert alert-info" role="alert">-->
+<!--                                    <p>This patient is currently checked out. Attendant information is archived.</p>-->
+<!--                                    <p>Previous attendant information will remain accessible for reference.</p>-->
+<!--                                </div>-->
+<!--                                <field name="attendance_ids" nolabel="1" readonly="1">-->
+<!--                                    <tree>-->
+<!--                                        <field name="create_date" string="Recorded Date"/>-->
+<!--                                        <field name="atten_name"/>-->
+<!--                                        <field name="atten_age"/>-->
+<!--                                        <field name="atten_gender"/>-->
+<!--                                        <field name="atten_relation_of_patient"/>-->
+<!--                                        <field name="atten_contact_number"/>-->
+<!--                                        <field name="atten_profession"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+<!--                            </page>-->
+
 
                             <!-- Add this to your patient form view for documents page -->
 <!--                            <page string="Documents">-->
@@ -337,8 +375,9 @@
                     <field name="cancer_type"/>
                     <field name="cancer_stage"/>
                     <field name="current_hospital"/>
-                    <field name="treatment_details"/>
+                    <field name="bed_allocation_id"/>
                     <field name="approximate_amount"/>
+                    <field name="treatment_details"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <field name="state" string="Stage"/>
@@ -364,49 +403,3 @@
 
     </data>
 </odoo>
-
-
-<!--                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">-->
-<!--                            <div class="oe_title mw-75 ps-0 pe-2">-->
-<!--                                <h1 class="d-flex flex-row align-items-center">-->
-<!--                                    <div name="name" class="o_field_widget o_required_modifier o_field_char" style="font-size: min(4vw, 2.6rem);">-->
-<!--                                        <input class="o_input" id="name_0" type="text" autocomplete="off" placeholder="Employee's Name">-->
-<!--                                    </div>-->
-<!--                                </h1>-->
-<!--                                <h2>-->
-<!--                                    <div name="job_title" class="o_field_widget o_field_char">-->
-<!--                                        <input class="o_input" id="job_title_0" type="text" autocomplete="off" placeholder="Job Position">-->
-<!--                                    </div>-->
-<!--                                </h2>-->
-<!--                                <div name="category_ids" class="o_field_widget o_field_many2many_tags">-->
-<!--                                <div class="o_field_tags d-inline-flex flex-wrap gap-1 o_tags_input o_input">-->
-<!--                                    <div class="o_field_many2many_selection d-inline-flex w-100">-->
-<!--                                        <div class="o_input_dropdown">-->
-<!--                                            <div class="o-autocomplete dropdown">-->
-<!--                                                <input type="text" class="o-autocomplete&#45;&#45;input o_input" autocomplete="off" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" id="category_ids_0" placeholder="Tags" aria-expanded="false">-->
-<!--                                            </div>-->
-<!--                                            <span class="o_dropdown_button">-->
-<!--                                        </span>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            </div>-->
-<!--                            <div class="o_employee_avatar m-0 p-0">-->
-<!--                                <div name="image_1920" class="o_field_widget o_field_image oe_avatar m-0">-->
-<!--                                    <div class="d-inline-block position-relative opacity-trigger-hover">-->
-<!--                                        <div aria-atomic="true" class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover" style="">-->
-<!--                                            <span style="display:contents">-->
-<!--                                                <button class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1" data-tooltip="Edit" aria-label="Edit">-->
-<!--                                                <i class="fa fa-pencil fa-fw">-->
-<!--                                                </i>-->
-<!--                                            </button>-->
-<!--                                            </span>-->
-<!--                                            <input type="file" class="o_input_file d-none" accept="image/*">-->
-<!--                                        </div>-->
-<!--                                        <img loading="lazy" class="img img-fluid" alt="Binary file" src="/web/static/img/placeholder.png" name="image_1920" style="">-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-

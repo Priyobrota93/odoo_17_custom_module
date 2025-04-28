@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Release Report QWeb Template -->
+    <template id="release_paper_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page" style="padding: 15px 10px 10px 10px ; font-family: Arial;">
+                    <div style="text-align: center;">
+                        <img t-att-src="request.httprequest.host_url + 'bancat_management_system/static/img/logo.png'" />
+                        <p>Corporate Office | Unit - A1, House - 300/E, Road - 14, Block - A, Basundhara R/A, Dhaka - 1229</p>
+                        <p>Email: support@bancat.org.bd | Phone: +880 161 222 6223 | Website: bancat.org.bd</p>
+                    </div>
+
+                    <hr/>
+
+<!--                    <div style="text-align: right; font-weight: bold; margin-top: -40px;">-->
+<!--                        Date: <t t-esc="current_date"/>-->
+<!--                    </div>-->
+
+                    <h3 style="margin-top: 20px; text-align: center;">Patient Release Paper</h3>
+
+                    <p style="text-align: justify; line-height: 1.6;">
+                        This is to formally certify that <strong><t t-esc="doc.name"/></strong>, bearing Patient ID
+                        <strong><t t-esc="doc.patient_id"/></strong>, was admitted under our care for the treatment of
+                        <strong><t t-esc="doc.previous_cancer_type_id.name"/></strong> (<strong><t t-esc="dict(doc.fields_get()['previous_cancer_stage']['selection'])[doc.previous_cancer_stage]"/></strong>).
+                        The patient, identified as <strong><t t-esc="doc.gender"/></strong>, received treatment at
+                        <strong><t t-esc="doc.previous_current_hospital_id.name"/></strong>.
+                        The patient was admitted on <strong><t t-esc="doc.start_date.strftime('%d/%m/%Y %H:%M') if doc.start_date else 'N/A'"/></strong>
+                        and was released on <strong><t t-esc="doc.end_date.strftime('%d/%m/%Y %H:%M') if doc.end_date else 'N/A'"/></strong>,
+                        having stayed under our supervision for a total of
+                        <strong><t t-esc="(doc.end_date - doc.start_date).days if doc.end_date and doc.start_date else 'N/A'"/> days</strong>.
+                        During this period, all necessary medical procedures and evaluations were completed in accordance
+                        with standard clinical protocols.
+                    </p>
+
+                    <p style="text-align: center; font-weight: bold; margin-top: 30px;">
+                        We extend our best wishes for the patient's continued health and well-being.
+                    </p>
+
+
+
+                    <div style="text-align: right; margin-top: 110px;">
+                        <p>Signature: _________________________</p>
+                        <p>Date: _____________________________</p>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>
+

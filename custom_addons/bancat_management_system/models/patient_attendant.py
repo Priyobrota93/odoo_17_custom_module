@@ -55,6 +55,7 @@ class Attendance(models.Model):
 
         return super(Attendance, self).create(vals)
 
+
     def open_second_form(self):
         return {
             'type': 'ir.actions.act_window',

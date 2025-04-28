@@ -1,0 +1,20 @@
+<odoo>
+    <record id="action_release_paper_report" model="ir.actions.report">
+        <field name="name">Release Paper</field>
+        <field name="model">bancat.patient</field>
+        <field name="report_name">bancat_management_system.release_paper_template</field>
+        <field name="report_file">bancat_management_system.release_paper_template</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="print_report_name">'Release_Paper_(%s)_%s' % (object.patient_id, object.name)</field>
+    </record>
+</odoo>
+
+<!--<report-->
+<!--    id="action_release_paper_pdf"-->
+<!--    string="Release Paper PDF"-->
+<!--    model="bancat.patient"-->
+<!--    report_type="qweb-pdf"-->
+<!--    name="bancat_management_system.release_paper_template"-->
+<!--    file="bancat_management_system.release_paper_template"-->
+<!--    print_report_name="'Release_Paper_(%s)_%s' % (object.patient_id, object.name)"-->
+<!--/>-->
