@@ -5,8 +5,8 @@
 
          <record id="action_open_donation" model="ir.actions.act_window">
             <field name="name">Donations</field>
-            <field name="res_model">account.account</field>
-            <field name="view_mode">form</field>
+            <field name="res_model">bancat.donation</field>
+            <field name="view_mode">form,tree</field>
             <field name="domain">[('donor_id', '=', active_id)]</field>
             <field name="context">{'default_donor_id': active_id}</field>
         </record>
@@ -36,6 +36,9 @@
             <field name="model">bancat.donor</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                       <button name="send_thank_you_sms" type="object" string="Send SMS" class="btn-primary"/>
+                    </header>
                     <sheet>
                         <div name="button_box" position="inside">
                             <button class="oe_stat_button"
@@ -43,7 +46,8 @@
                                     name="%(action_open_donation)d"
                                     icon="fa-hand-holding-dollar">
                                 <div class="oe_stat_info">
-                                    <span class="oe_stat_text">Donation</span>
+<!--                                    <span class="oe_stat_text">Donation</span>-->
+                                    <field name="donation_ids" widget="statinfo" stat_type="sum" field="amount"/>
 <!--                                    <div>-->
 <!--                                        <field name="Total Donation"/>-->
 <!--                                    </div>-->
@@ -153,14 +157,14 @@
                                 <!-- Donor Tier Icon in the Top-Right Corner -->
                                  <div class="donor-tier-icon">
                                     <t t-if="record.donor_tier.raw_value == 'Gold Tier'">
-                                        <img t-att-src="'/bancat_management_system/static/img/gold_badge.png'" class="donor-badge"/>
+                                        <img t-att-src="'/bancat_management_system/static/img/gold_badge.png'" class="donor-badge" alt="Gold Tier Badge"/>
 
                                     </t>
                                     <t t-if="record.donor_tier.raw_value == 'Silver Tier'">
-                                        <img t-att-src="'/bancat_management_system/static/img/silver_badge.png'" class="donor-badge"/>
+                                        <img t-att-src="'/bancat_management_system/static/img/silver_badge.png'" class="donor-badge" alt="Silver Tier Badge"/>
                                     </t>
                                     <t t-if="record.donor_tier.raw_value == 'Bronze Tier'">
-                                        <img t-att-src="'/bancat_management_system/static/img/bronze_badge.png'" class="donor-badge"/>
+                                        <img t-att-src="'/bancat_management_system/static/img/bronze_badge.png'" class="donor-badge" alt="Bronze Tier Badge"/>
                                     </t>
                                 </div>
                                 <strong><field name="name"/></strong>
@@ -179,6 +183,27 @@
                     </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+
+        <record id="view_bancat_donation_form" model="ir.ui.view">
+            <field name="name">bancat.donation.form</field>
+            <field name="model">bancat.donation</field>
+            <field name="arch" type="xml">
+                <form string="Donation">
+                    <sheet>
+                        <group>
+                            <field name="donor_id"/>
+                            <field name="amount"/>
+                            <field name="date"/>
+                            <field name="method"/>
+                            <field name="status"/>
+                            <field name="note"/>
+                            <button string="Pay via SSLCommerz" type="object" name="action_pay_sslcommerz" invisible= "method!='sslcommerz'"/>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 

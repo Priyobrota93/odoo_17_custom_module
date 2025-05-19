@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data >
+        <record id="sms_template_birthday" model="sms.template">
+            <field name="name">Birthday Wish SMS</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="body">
+                Hi {{ object.name }}, Happy Birthday! 🎉
+                May this year bring you good health, happiness, and success.
+
+                Best regards,
+                {{ user.name }}
+            </field>
+        </record>
+    </data>
+</odoo>

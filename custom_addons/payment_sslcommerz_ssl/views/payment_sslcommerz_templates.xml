@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="store_id" t-att-value="store_id" />
+            <input type="hidden" name="store_passwd" t-att-value="store_passwd" />
+            <input type="hidden" name="tran_id" t-att-value="tran_id" />
+            <input type="hidden" name="total_amount" t-att-value="total_amount" />
+            <input type="hidden" name="currency" t-att-value="currency" />
+            <input type="hidden" name="product_category" t-att-value="product_category" />
+            <input type="hidden" name="product_name" t-att-value="product_name" />
+            <input type="hidden" name="cus_name" t-att-value="cus_name" />
+            <input type="hidden" name="cus_email" t-att-value="cus_email" />
+            <input type="hidden" name="cus_add1" t-att-value="cus_add1" />
+            <input type="hidden" name="cus_city" t-att-value="cus_city" />
+            <input type="hidden" name="cus_postcode" t-att-value="cus_postcode" />
+            <input type="hidden" name="cus_country" t-att-value="cus_country" />
+            <input type="hidden" name="cus_phone" t-att-value="cus_phone" />
+            <input type="hidden" name="success_url" t-att-value="success_url" />
+            <input type="hidden" name="fail_url" t-att-value="fail_url" />
+            <input type="hidden" name="cancel_url" t-att-value="cancel_url" />
+            <input type="hidden" name="signature" t-att-value="signature" />
+            <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+        </form>
+    </template>
+
+</odoo>

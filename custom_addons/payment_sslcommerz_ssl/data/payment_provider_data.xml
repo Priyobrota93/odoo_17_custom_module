@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_sslcommerz" model="payment.provider">
+        <field name="code">sslcommerz</field>
+        <field name="name">SSLCommerz</field>
+        <field name="redirect_form_view_id" ref="redirect_form" />
+        <field name="module_id" ref="base.module_payment_sslcommerz_ssl" />
+        <field name="payment_method_ids"
+            eval="[(6, 0, [
+            ref('payment_method_sslcommerz'),
+        ])]" />
+        <field name="image_128" type="base64"
+            file="payment_sslcommerz_ssl/static/description/images/sslcommerz_logo.png" />
+    </record>
+
+</odoo>

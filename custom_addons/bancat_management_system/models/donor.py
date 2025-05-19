@@ -1,7 +1,9 @@
-from odoo import fields, models, api
+from odoo import fields, models, api,_
 from datetime import date
 import re
 from odoo.exceptions import ValidationError
+from twilio.rest import Client
+
 
 
 class Donor(models.Model):
@@ -41,10 +43,8 @@ class Donor(models.Model):
     contact_contact = fields.Char(string="Contact", tracking=True)
     contact_email = fields.Char(string="Email", tracking=True)
     donor_tier = fields.Many2one('bancat.contributor.type', string="Donor Tier", required=True, tracking=True)
-    donation_ids = fields.One2many('account.account', 'donor_id', string="Donations")
-
-
-
+    # donation_ids = fields.One2many('account.account', 'donor_id', string="Donations")
+    donation_ids = fields.One2many('bancat.donation', 'donor_id', string="Donations")
 
     @api.depends('dob')
     def _compute_age(self):
@@ -72,7 +72,13 @@ class Donor(models.Model):
 
             vals['donor_id'] = f'BANCAT-D{new_donor_number}'  # Format as desired (e.g., BANCAT-D1)
 
-        return super(Donor, self).create(vals)
+        donor = super(Donor, self).create(vals)
+
+        # After creating, send SMS
+        if donor.donor_contact:
+            donor.send_thank_you_sms()
+
+        return donor
 
     @api.constrains('email', 'contact_email')
     def _check_email_format(self):
@@ -82,3 +88,42 @@ class Donor(models.Model):
                 raise ValidationError("Invalid email format for Donor Email: %s" % record.email)
             if record.contact_email and not re.match(email_regex, record.contact_email):
                 raise ValidationError("Invalid email format for Contact Email: %s" % record.contact_email)
+
+    def send_thank_you_sms(self):
+        twilio_account = self.env['twilio.account'].search([('state', '=', 'confirm')], limit=1)
+        if not twilio_account:
+            raise ValidationError(_("No connected Twilio account found."))
+
+        account_sid = twilio_account.account_sid
+        auth_token = twilio_account.auth_token
+        from_number = twilio_account.from_number
+
+        if not account_sid or not auth_token or not from_number:
+            raise ValidationError(_("Twilio credentials are not configured properly in System Parameters."))
+
+        client = Client(account_sid, auth_token)
+
+        try:
+            formatted_number = self.format_mobile_number(self.donor_contact)
+            message = client.messages.create(
+                body=f"Dear {self.name}, thank you for your donation of ${10000:.2f}!",
+                from_=from_number,
+                to=formatted_number
+            )
+        except Exception as e:
+            raise ValidationError(f"Failed to send SMS: {str(e)}")
+
+    def format_mobile_number(self, number):
+        number = number.strip().replace(' ', '').replace('-', '')
+        if not number.startswith('+'):
+            if number.startswith('0') and len(number) == 11:
+                number = '+88' + number
+            elif len(number) == 13 and number.startswith('88'):
+                number = '+' + number
+            elif len(number) == 10:
+                number = '+880' + number
+            else:
+                raise ValidationError("Invalid phone number format.")
+        return number
+
+

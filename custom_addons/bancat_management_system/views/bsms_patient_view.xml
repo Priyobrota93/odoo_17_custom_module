@@ -58,8 +58,8 @@
                 <form>
 
                     <header>
-                        <button name="action_check_in" type="object" string="Check In" class="btn btn-primary"/>
-                        <button name="action_check_out" type="object" string="Check Out" class="btn btn-danger"/>
+                        <button name="action_check_in" type="object" string="Check In" class="btn btn-primary" invisible="state == 'check_in'"/>
+                        <button name="action_check_out" type="object" string="Check Out" class="btn btn-danger" invisible="state == 'check_out'"/>
                         <field  name="state" widget="statusbar"/>
                         <!-- <field  name="state" widget="statusbar" statusbar_visible ="new,received"/>   {(if want to specific statusbar state show using statusbar_visible and specific state mention)}-->
                     </header>
