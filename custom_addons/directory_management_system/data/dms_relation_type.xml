@@ -1,0 +1,14 @@
+<odoo>
+    <data noupdate="1">
+        <record id ="relation_type_sir" model="dms.relation.type">
+            <field name="name">Sir</field>
+        </record>
+        <record id ="relation_type_friend" model="dms.relation.type">
+            <field name="name">Friend</field>
+        </record>
+        <record id ="relation_type_Family" model="dms.relation.type">
+            <field name="name">Family</field>
+        </record>
+
+    </data>
+</odoo>

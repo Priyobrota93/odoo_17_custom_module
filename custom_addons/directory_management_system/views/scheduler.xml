@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_send_birthday_emails" model="ir.cron">
+            <field name="name">Send Birthday wish</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_birthday_emails()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_eid_ui_adaha_wish" model="ir.cron">
+            <field name="name">Eid-ul-Adha Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_eid_ul_adha_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_pohela_boishakh_wish" model="ir.cron">
+            <field name="name">Pohela Boishakh Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_pohela_boishakh_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="ir_cron_send_durga_puja_wish" model="ir.cron">
+            <field name="name">Durga Puja Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_durga_puja_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_eid_ul_fitr_wish" model="ir.cron">
+            <field name="name">Eid-ul-fitr Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_eid_ul_fitr_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_language_day_wish" model="ir.cron">
+            <field name="name">Language Day Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_language_day_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_independence_day_wish" model="ir.cron">
+            <field name="name">Independence Day Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_independence_day_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_victory_day_wish" model="ir.cron">
+            <field name="name">Victory Day Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_victory_day_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_christmas_wish" model="ir.cron">
+            <field name="name">Christmas Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_christmas_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="ir_cron_send_new_year_wish" model="ir.cron">
+            <field name="name">New Year Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_new_year_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_send_buddha_purnima_wish" model="ir.cron">
+            <field name="name">Buddha Purnima Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_buddha_purnima_email()</field>
+            <field name="interval_number">365</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+
+
+
+    </data>
+</odoo>

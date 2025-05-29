@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo >
+    <data>
+        <record id="email_template_eid_ul_fitr" model="mail.template">
+            <field name="name">Eid-ul-Fitr Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">🌙 Eid-ul-Fitr Mubarak 🎉</field>
+            <field name="email_from">{{ user.email }}</field>
+            <field name="reply_to">no-reply@example.com</field>
+            <field name="email_to">{{ object.email or '' }}</field>
+            <field name="partner_to">{{ user.partner_id.id or '' }}</field>
+            <field name="body_html" type="html">
+                <p>Dear  <strong>
+                        <t t-out="[
+        part for part in (object.name or '').split(' ')
+        if part.lower() not in ['mr.', 'mrs.', 'ms.', 'dr.', 'miss']
+    ][0] if object.name else 'Friend'" />
+                    </strong>,</p>
+                <p>Wishing you and your loved ones joy, peace, and blessings this Eid. Eid Mubarak!</p>
+                <p>Regards,<br/>
+                <t t-out="user.name"/></p>
+            </field>
+        </record>
+    </data>
+</odoo>
+

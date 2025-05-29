@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+directory_management_system.access_dms_relation_type,access_dms_relation_type,directory_management_system.model_dms_relation_type,base.group_user,1,1,1,1

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_relation" model="ir.ui.view">
+        <field name="name">res.partner.form.relation.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='parent_id']" position="before">
+                <field name="x_studio_gender" placeholder="Gender" invisible="company_type == 'company'"/>
+            </xpath>
+
+           <xpath expr="//field[@name='vat']" position="before">
+                <field name="x_studio_relation" invisible="company_type == 'company'"/>
+            </xpath>
+
+          <xpath expr="//field[@name='x_studio_relation']" position="before">
+                <field name="religion" invisible="company_type == 'company'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='religion']" position="before">
+                <field name="birth_date" invisible="company_type == 'company'"/>
+            </xpath>
+            <xpath expr="//field[@name='birth_date']" position="after">
+                <field name="age" invisible="company_type == 'company'"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_partner_form_hide_company_option" model="ir.ui.view">
+        <field name="name">res.partner.form.remove_company_type_option</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_type']" position="replace">
+                <field name="company_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--    <record id="view_partner_filter_inherit_religion_relation" model="ir.ui.view">-->
+<!--        <field name="name">res.partner.search.religion.relation</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="inherit_id" ref="base.view_res_partner_filter"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--              <xpath expr="//filter[@name='my_partner']" position="after">-->
+<!--                <filter string="Religion: Islam" name="filter_religion_islam" domain="[('religion', '=', 'islam')]"/>-->
+<!--                <filter string="Religion: Hinduism" name="filter_religion_hinduism" domain="[('religion', '=', 'hinduism')]"/>-->
+<!--                <separator/>-->
+<!--                <filter string="Relation: Father" name="filter_relation_father" domain="[('relation', '=', 'sir')]"/>-->
+<!--                <filter string="Relation: Mother" name="filter_relation_mother" domain="[('relation', '=', 'friend')]"/>-->
+<!--              </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <record id="view_partner_search_inherit" model="ir.ui.view">
+    <field name="name">res.partner.search.inherit</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_res_partner_filter"/>
+    <field name="arch" type="xml">
+        <xpath expr="//search" position="inside">
+
+            <filter string="Sir" name="relation" domain="[('x_studio_relation', 'ilike', 'Sir')]"/>
+            <filter string="Friend" name="relation" domain="[('x_studio_relation', 'ilike', 'Friend')]"/>
+            <filter string="Colleague" name="relation" domain="[('x_studio_relation', 'ilike', 'Colleague')]"/>
+            <filter string="Madam" name="relation" domain="[('x_studio_relation', 'ilike', 'Madam')]"/>
+            <separator/>
+            <filter string="Islam" name="religion" domain="[('religion', 'ilike', 'Islam')]"/>
+            <filter string="Hinduism" name="religion" domain="[('religion', 'ilike', 'Hinduism')]"/>
+            <filter string="Buddhism" name="religion" domain="[('religion', 'ilike', 'Buddhism')]"/>
+            <filter string="Christianity" name="religion" domain="[('religion', 'ilike', 'Christianity')]"/>
+
+
+            <!-- Group by -->
+            <separator/>
+            <filter string="Religion" name="group_by_religion" context="{'group_by': 'religion'}"/>
+            <filter string="Relation" name="group_by_relation" context="{'group_by': 'x_studio_relation'}"/>
+
+        </xpath>
+    </field>
+</record>
+
+</odoo>

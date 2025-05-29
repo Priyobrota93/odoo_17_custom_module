@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo >
+    <data>
+        <record id="email_template_independence_day" model="mail.template">
+            <field name="name">Independence Day Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">Happy Independence Day of Bangladesh</field>
+            <field name="email_from">{{ user.email }}</field>
+            <field name="reply_to">no-reply@example.com</field>
+            <field name="email_to">{{ object.email or '' }}</field>
+            <field name="partner_to">{{ user.partner_id.id or '' }}</field>
+            <field name="body_html" type="html">
+                <p>Dear  <strong>
+                        <t t-out="[
+        part for part in (object.name or '').split(' ')
+        if part.lower() not in ['mr.', 'mrs.', 'ms.', 'dr.', 'miss']
+    ][0] if object.name else 'Friend'" />
+                    </strong>,</p>
+                <p>On this glorious day, let's honor our freedom fighters and celebrate our independence. Joy Bangla!</p>
+                <p>Best regards,<br/>
+                <t t-out="user.name"/></p>
+            </field>
+        </record>
+    </data>
+</odoo>
+

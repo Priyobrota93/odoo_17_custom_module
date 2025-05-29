@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo >
+    <data>
+        <record id="email_template_buddha_purnima" model="mail.template">
+            <field name="name">Buddha Purnima Greeting</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">🕊️ Happy Buddha Purnima 🌸</field>
+            <field name="email_from">{{ user.email }}</field>
+            <field name="reply_to">no-reply@example.com</field>
+            <field name="email_to">{{ object.email or '' }}</field>
+            <field name="partner_to">{{ user.partner_id.id or '' }}</field>
+            <field name="body_html" type="html">
+                <p>Dear
+                    <strong>
+                        <t t-out="(object.name or '').split(' ')[1] + ' Dada' if (object.name or '').count(' ') >= 1 else (object.name or 'Friend')" />
+                    </strong>,
+                </p>
+                <p>On this sacred day of Buddha Purnima, may peace and wisdom prevail in your life. Wishing you serenity and enlightenment.</p>
+                <p>Regards,<br/>
+                <t t-out="user.name"/></p>
+            </field>
+        </record>
+    </data>
+</odoo>
+
