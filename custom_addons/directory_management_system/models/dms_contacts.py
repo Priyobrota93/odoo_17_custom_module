@@ -52,16 +52,19 @@ class dms_inherit_contacts(models.Model):
         first_valid = name_filtered[0] if name_filtered else name_parts[0]
 
         religion = (religion or '').strip().lower()
-        relationship = (relationship or '').strip().lower()
+        relationship_str = getattr(relationship, 'name', relationship)
+        relationship = (relationship_str or '').strip().lower()
 
         if relationship == 'sir':
             return f"{first_valid} Sir"
+        elif relationship == 'madam':
+            return f"{first_valid} Madam"
         elif relationship == 'colleague':
             return f"{first_valid} Bhai"
         elif relationship == 'friends':
             return f"{first_valid}"
         else:
-            if religion == 'hinduism':
+            if religion in ['hinduism', 'buddhism']:
                 return f"{first_valid} Dada"
             else:
                 return f"{first_valid}"
@@ -118,6 +121,22 @@ class dms_inherit_contacts(models.Model):
                 continue
             self._send_template_email(template, partner, user)
 
+    def _send_eid_ul_adha_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        eid_ul_adha_date = expected_date
+        if today != eid_ul_adha_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
     # 🎂 Birthday Scheduler
     @api.model
     def cron_send_birthday_emails(self):
@@ -153,8 +172,9 @@ class dms_inherit_contacts(models.Model):
     @api.model
     def cron_send_eid_ul_adha_email(self):
         self._send_emails_for_fixed_date(
-            '05-25',
+            '05-31',
             'directory_management_system.email_template_eid_ul_adha'
+
         )
 
     # 🗣️ Language Day

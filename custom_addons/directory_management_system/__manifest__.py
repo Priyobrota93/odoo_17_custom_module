@@ -8,7 +8,7 @@
         "views/scheduler.xml",
         "views/birthday_sms_scheduler.xml",
         "views/birthday_action_create.xml",
-        "views/eid_ul_adaha_scheduler.xml",
+        # "views/eid_ul_adaha_scheduler.xml",
         "views/res_partner_inherit_views.xml",
         "data/birthday_wish_email_template.xml",
         # "data/birthday_wish_sms_template.xml",
