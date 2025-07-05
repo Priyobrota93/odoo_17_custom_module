@@ -11,13 +11,14 @@
             <field name="partner_to">{{ user.partner_id.id or '' }}</field>
             <field name="body_html" type="html">
                 <p>Dear
-                    <strong>
-                        <t t-out="(object.name or '').split(' ')[1] + ' Dada' if (object.name or '').count(' ') >= 1 else (object.name or 'Friend')" />
-                    </strong>,
+<!--                    <strong>-->
+<!--                        <t t-out="(object.name or '').split(' ')[1] + ' Dada' if (object.name or '').count(' ') >= 1 else (object.name or 'Friend')" />-->
+<!--                    </strong>-->
+                    <strong>{{custom_name}}</strong>,
                 </p>
                 <p>On this sacred day of Buddha Purnima, may peace and wisdom prevail in your life. Wishing you serenity and enlightenment.</p>
                 <p>Regards,<br/>
-                <t t-out="user.name"/></p>
+                <strong><t t-out="user.name or ''"> M Jahangir Alam</t></strong></p>
             </field>
         </record>
     </data>

@@ -70,6 +70,7 @@ class dms_inherit_contacts(models.Model):
                 return f"{first_valid}"
 
     def _send_template_email(self, template, partner, user):
+        year = datetime.now().year
         customized_name = self.get_custom_name(
             partner.name,
             partner.religion,
@@ -80,7 +81,10 @@ class dms_inherit_contacts(models.Model):
         if '{{custom_name}}' in body:
             body = body.replace('{{custom_name}}', customized_name)
 
-        template.with_user(user).send_mail(partner.id, force_send=True, email_values={'body_html': body})
+        template.with_user(user).with_context({
+        'year': year,
+        'custom_name': customized_name,
+    }).send_mail(partner.id, force_send=True, email_values={'body_html': body})
 
     def _get_today_str(self):
         return datetime.today().strftime('%m-%d')
@@ -121,10 +125,162 @@ class dms_inherit_contacts(models.Model):
                 continue
             self._send_template_email(template, partner, user)
 
+
+    def _send_pohela_boishakh_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        pohela_boishakh_date = expected_date
+        if today != pohela_boishakh_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+
+
+    def _send_durga_puja_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        durga_puja_date = expected_date
+        if today != durga_puja_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+
+    def _send_eid_ul_fitr_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        eid_ul_fitr_date = expected_date
+        if today != eid_ul_fitr_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+
     def _send_eid_ul_adha_email(self, template_xml_id,expected_date):
         today = self._get_today_str()
         eid_ul_adha_date = expected_date
         if today != eid_ul_adha_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+    def _send_language_day_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        language_day_date = expected_date
+        if today != language_day_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+
+    def _send_independence_day_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        independence_day_date = expected_date
+        if today != independence_day_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+
+    def _send_victory_day_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        victory_day_date = expected_date
+        if today != victory_day_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+    def _send_christmas_day_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        christmas_day_date = expected_date
+        if today != christmas_day_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+    def _send_new_year_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        new_year_date = expected_date
+        if today != new_year_date:
+            return
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        user = self._get_admin_user()
+        partners = self._get_eligible_partners()
+
+        for partner in partners:
+            self._send_template_email(template, partner, user)
+
+
+    def _send_buddha_purnima_email(self, template_xml_id,expected_date):
+        today = self._get_today_str()
+        new_year_date = expected_date
+        if today != new_year_date:
             return
 
         template = self.env.ref(template_xml_id, raise_if_not_found=False)
@@ -213,7 +369,7 @@ class dms_inherit_contacts(models.Model):
     @api.model
     def cron_send_new_year_email(self):
         self._send_emails_for_fixed_date(
-            '01-01',
+            '06-02',
             'directory_management_system.email_template_new_year'
         )
 

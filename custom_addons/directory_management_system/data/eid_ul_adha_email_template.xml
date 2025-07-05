@@ -10,10 +10,10 @@
             <field name="email_to">{{ object.email or '' }}</field>
             <field name="partner_to">{{ user.partner_id.id or '' }}</field>
             <field name="body_html" type="html">
-                <p>Dear {{custom_name}},</p>
+                <p>Dear <strong>{{custom_name}}</strong>,</p>
                 <p>May this Eid bring peace, happiness, and prosperity to you and your family. Eid Mubarak!</p>
                 <p>Warm regards,<br/>
-                <t t-out="user.name"/></p>
+                <strong><t t-out="user.name or ''"> M Jahangir Alam</t></strong></p>
             </field>
         </record>
     </data>

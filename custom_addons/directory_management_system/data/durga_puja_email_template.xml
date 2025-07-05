@@ -4,28 +4,30 @@
         <record id="email_template_durga_puja" model="mail.template">
             <field name="name">Durga Puja Greeting</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="subject">🌺 শুভ দুর্গা পূজা {{ (datetime.datetime.now().year - 593) }} 🎉</field>
+            <field name="subject">🌺 শুভ দুর্গা পূজা 🎉</field>
             <field name="email_from">{{ user.email }}</field>
             <field name="reply_to">no-reply@example.com</field>
             <field name="email_to">{{ object.email or '' }}</field>
             <field name="partner_to">{{ user.partner_id.id or '' }}</field>
             <field name="body_html" type="html">
                 <p>Dear
-                    <strong>
-<!--                        <t t-out="(object.name or '').split(' ')[0] + ' Dada' if (object.name or '').count(' ') >= 1 else (object.name or 'Friend')" />-->
-                        <t t-out="[
-        part for part in (object.name or '').split(' ')
-        if part.lower() not in ['mr.', 'mrs.', 'ms.', 'dr.', 'miss']
-    ][0] + ' Dada' if object.name else 'Friend'" />
-                    </strong>,
+<!--                    <strong>-->
+<!--&lt;!&ndash;                        <t t-out="(object.name or '').split(' ')[0] + ' Dada' if (object.name or '').count(' ') >= 1 else (object.name or 'Friend')" />&ndash;&gt;-->
+<!--                        <t t-out="[-->
+<!--        part for part in (object.name or '').split(' ')-->
+<!--        if part.lower() not in ['mr.', 'mrs.', 'ms.', 'dr.', 'miss']-->
+<!--    ][0] + ' Dada' if object.name else 'Friend'" />-->
+<!--                    </strong>-->
+                    <strong>{{custom_name}}</strong>,
                 </p>
-                <p>🌺 শুভ দুর্গা পূজা! May Goddess Durga bless you and your family with strength, happiness, and prosperity.</p>
+<!--                {{ (year - 593) }}-->
+                <p>🌺 শুভ দুর্গা পূজা!  <strong><t t-out="year - 593"/></strong> May Goddess Durga bless you and your family with strength, happiness, and prosperity.</p>
                 <p>As the festive lights shine bright, may your days be filled with warmth, togetherness, and joy.</p>
 
                 <p>দুর্গা মা আপনার জীবনকে আনন্দ, সাফল্য ও শান্তিতে ভরিয়ে তুলুন।</p>
 
                 <p>Warm wishes,<br/>
-                <strong><t t-out="user.name"/></strong></p>
+                <strong><t t-out="user.name or ''"> M Jahangir Alam</t></strong></p>
             </field>
         </record>
     </data>

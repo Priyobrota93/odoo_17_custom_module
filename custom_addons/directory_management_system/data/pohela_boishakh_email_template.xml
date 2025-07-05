@@ -11,17 +11,18 @@
             <field name="partner_to">{{ user.partner_id.id or '' }}</field>
             <field name="body_html" type="html">
                 <p>Dear
-                    <strong>
-                        <t t-out="[
-        part for part in (object.name or '').split(' ')
-        if part.lower() not in ['mr.', 'mrs.', 'ms.', 'dr.', 'miss']
-    ][0] if object.name else 'Friend'" />
-                    </strong>,
+<!--                    <strong>-->
+<!--                        <t t-out="[-->
+<!--        part for part in (object.name or '').split(' ')-->
+<!--        if part.lower() not in ['mr.', 'mrs.', 'ms.', 'dr.', 'miss']-->
+<!--    ][0] if object.name else 'Friend'" />-->
+<!--                    </strong>-->
+                    <strong>{{custom_name}}</strong>,
                 </p>
                 <p>Wishing you a joyful and prosperous Bengali New Year! May the new year bring peace, happiness, and success to your life.</p>
                 <p>শুভ নববর্ষ!</p>
                 <p>Best regards,<br/>
-                <t t-out="user.name"/></p>
+                <strong><t t-out="user.name or ''"> M Jahangir Alam</t></strong></p>
             </field>
         </record>
     </data>

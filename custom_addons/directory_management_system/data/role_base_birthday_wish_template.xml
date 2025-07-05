@@ -14,7 +14,7 @@
                 <p>I value your special day just as much as I value you. On your birthday, I send you my warmest and most heartfelt wishes.</p>
                 <p>Wishing you a very happy birthday!</p>
                 <p>Best regards,<br/>
-                <t t-out="user.name or ''"> Wood Corner</t></p>
+                <strong><t t-out="user.name or ''"> M Jahangir Alam</t></strong></p>
             </field>
         </record>
     </data>
