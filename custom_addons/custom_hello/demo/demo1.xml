@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="demo_hello_message" model="hello.message">
+      <field name="name">Demo Hello World</field>
+    </record>
+  </data>
+</odoo>

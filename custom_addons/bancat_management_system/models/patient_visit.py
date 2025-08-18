@@ -9,7 +9,7 @@ class PatientVisit(models.Model):
         ('check_in', 'Check In'),
         ('check_out', 'Check Out'),
     ], string="Stage", default='check_in', tracking=True)
-    approximate_amount = fields.Float(string="Approximate Amount")
+    approximate_amount = fields.Float(string="Approximate Amount", store=True)
 
     start_date = fields.Datetime(string="Start Date", default=fields.Datetime.now, readonly=True)
     end_date = fields.Datetime(string="End Date")
@@ -71,5 +71,6 @@ class PatientVisit(models.Model):
                     'treatment_details': patient.treatment_details,
                     'current_status': patient.current_status,
                     'bed_allocation_id': patient.bed_allocation_id.id if patient.bed_allocation_id else False,
+                    'approximate_amount': patient.approximate_amount
                 })
         return super(PatientVisit, self).create(vals)

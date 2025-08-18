@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="view_hello_message_tree" model="ir.ui.view">
+      <field name="name">hello.message.tree</field>
+      <field name="model">hello.message</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_hello_message_form" model="ir.ui.view">
+      <field name="name">hello.message.form</field>
+      <field name="model">hello.message</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <field name="name"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_hello_message" model="ir.actions.act_window">
+      <field name="name">Hello Messages</field>
+      <field name="res_model">hello.message</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_custom_root" name="Custom"/>
+    <menuitem id="menu_hello_message" name="Hello Messages" parent="menu_custom_root"/>
+    <menuitem id="menu_hello_message_action" name="Messages" parent="menu_hello_message" action="action_hello_message"/>
+
+  </data>
+</odoo>

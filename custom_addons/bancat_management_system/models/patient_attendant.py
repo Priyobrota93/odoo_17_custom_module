@@ -29,7 +29,7 @@ class Attendance(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other'),
-    ], string='Gender',required=True)
+    ], string='Gender')
     atten2_relation_of_patient = fields.Char(string='Relation of Patient')
     atten2_profession = fields.Char(string='Profession')
     atten2_address = fields.Text(string='Address')
