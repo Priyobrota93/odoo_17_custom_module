@@ -276,6 +276,15 @@ class Patient(models.Model):
             'parent_folder_id': patient_folder.id,
         })
 
+        # If no bed selected now, try to reuse previous one if available
+        if not self.bed_allocation_id and self.previous_bed_allocation_id and self.previous_bed_allocation_id.is_available:
+            self.write({'bed_allocation_id': self.previous_bed_allocation_id.id})
+            # don't clear previous_* here; it’s useful for audit/history
+
+        # Mark chosen bed as unavailable
+        if self.bed_allocation_id:
+            self.bed_allocation_id.is_available = False
+
         # Create a new visit record
         new_visit = self.env['bancat.patient.visit'].create({
             'patient_id': self.id,
@@ -288,6 +297,7 @@ class Patient(models.Model):
             'current_hospital': self.current_hospital.id if self.current_hospital else False,
             'treatment_details': self.treatment_details,
             'current_status': self.current_status,
+            'bed_allocation_id': self.bed_allocation_id.id if self.bed_allocation_id else False,
         })
 
         # Update the patient record
@@ -318,10 +328,10 @@ class Patient(models.Model):
             })
 
         # If there's a previous bed allocation, try to allocate it if available
-        if self.previous_bed_allocation_id and self.previous_bed_allocation_id.is_available:
-            self.bed_allocation_id = self.previous_bed_allocation_id.id
-            self.previous_bed_allocation_id.is_available = False
-            self.previous_bed_allocation_id = False
+        # if self.previous_bed_allocation_id and self.previous_bed_allocation_id.is_available:
+        #     self.bed_allocation_id = self.previous_bed_allocation_id.id
+        #     self.previous_bed_allocation_id.is_available = False
+        #     self.previous_bed_allocation_id = False
 
         # Refresh the latest folder
         self._compute_latest_folder_id()
@@ -407,6 +417,7 @@ class Patient(models.Model):
                     'current_hospital': self.current_hospital.id if self.current_hospital else False,
                     'treatment_details': self.treatment_details,
                     'current_status': self.current_status,
+                    'bed_allocation_id': self.bed_allocation_id.id if self.bed_allocation_id else False,
                 })
 
         # Free up the bed

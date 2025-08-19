@@ -74,3 +74,5 @@ class PatientVisit(models.Model):
                     'approximate_amount': patient.approximate_amount
                 })
         return super(PatientVisit, self).create(vals)
+
+
